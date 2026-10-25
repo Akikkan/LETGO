@@ -5,7 +5,19 @@ function renderSettings(s, appearance) {
   return `<section class="flow-page settings-page" aria-label="设置">
     <header class="flow-header"><button type="button" class="button muted" data-action="back" aria-label="返回">← 返回</button><div><div class="flow-eyebrow">${esc(s?.name || '工作区')}</div><h1>设置</h1></div></header>
     <div class="form-grid">
-      <section class="setting-row"><div class="field"><label>外观</label><span>选择界面显示方式</span></div><div class="settings-actions"><button type="button" class="button ${theme === 'dark' ? 'primary' : 'muted'}" data-action="toggle-theme" aria-pressed="${theme === 'dark'}">${theme === 'dark' ? '深色' : '浅色'}模式</button><button type="button" class="button ${translucent ? 'primary' : 'muted'}" data-action="toggle-translucency" aria-pressed="${!!translucent}">液态玻璃 ${translucent ? '开启' : '关闭'}</button></div></section>
+      <section class="setting-row">
+        <div class="field"><label>界面主题</label><span>选择日常偏好的视觉模式</span></div>
+        <div class="theme-segmented-control" role="group" aria-label="界面主题">
+          <button type="button" class="button droplet-btn ${theme === 'light' ? 'is-active primary' : ''}" data-action="set-theme-light" aria-pressed="${theme === 'light'}">☀ 浅色模式</button>
+          <button type="button" class="button droplet-btn ${theme === 'dark' ? 'is-active primary' : ''}" data-action="set-theme-dark" aria-pressed="${theme === 'dark'}">☾ 深色模式</button>
+        </div>
+      </section>
+      <section class="setting-row">
+        <div class="field"><label>液态玻璃效果</label><span>全局毛玻璃折射与悬浮水滴质感</span></div>
+        <div class="settings-actions">
+          <button type="button" class="button droplet-btn ${translucent ? 'is-active primary' : ''}" data-action="toggle-translucency" aria-pressed="${!!translucent}">${translucent ? '✓ 已开启' : '○ 已关闭'}</button>
+        </div>
+      </section>
       <section class="setting-row"><div class="field"><label for="setting-auto-advance">自动前进</label><span>收录、跳过或删除后自动前进</span></div><input id="setting-auto-advance" type="checkbox" data-setting="autoAdvance" ${s?.autoAdvance !== false ? 'checked' : ''} aria-label="标记后自动前进" /></section>
       <button type="button" class="button muted settings-link" data-action="ai"><span><strong>AI 助手</strong><small>选择建议模式和模型来源</small></span><span aria-hidden="true">›</span></button>
       <button type="button" class="button muted settings-link" data-action="tags"><span><strong>标签管理</strong><small>调整标签名称和顺序</small></span><span aria-hidden="true">›</span></button>

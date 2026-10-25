@@ -197,7 +197,19 @@ function renderSettings(s, appearance) {
   return `<section class="flow-page settings-page" aria-label="设置">
     <header class="flow-header"><button type="button" class="button muted" data-action="back" aria-label="返回">← 返回</button><div><div class="flow-eyebrow">${esc(s?.name || '工作区')}</div><h1>设置</h1></div></header>
     <div class="form-grid">
-      <section class="setting-row"><div class="field"><label>外观</label><span>选择界面显示方式</span></div><div class="settings-actions"><button type="button" class="button ${theme === 'dark' ? 'primary' : 'muted'}" data-action="toggle-theme" aria-pressed="${theme === 'dark'}">${theme === 'dark' ? '深色' : '浅色'}模式</button><button type="button" class="button ${translucent ? 'primary' : 'muted'}" data-action="toggle-translucency" aria-pressed="${!!translucent}">液态玻璃 ${translucent ? '开启' : '关闭'}</button></div></section>
+      <section class="setting-row">
+        <div class="field"><label>界面主题</label><span>选择日常偏好的视觉模式</span></div>
+        <div class="theme-segmented-control" role="group" aria-label="界面主题">
+          <button type="button" class="button droplet-btn ${theme === 'light' ? 'is-active primary' : ''}" data-action="set-theme-light" aria-pressed="${theme === 'light'}">☀ 浅色模式</button>
+          <button type="button" class="button droplet-btn ${theme === 'dark' ? 'is-active primary' : ''}" data-action="set-theme-dark" aria-pressed="${theme === 'dark'}">☾ 深色模式</button>
+        </div>
+      </section>
+      <section class="setting-row">
+        <div class="field"><label>液态玻璃效果</label><span>全局毛玻璃折射与悬浮水滴质感</span></div>
+        <div class="settings-actions">
+          <button type="button" class="button droplet-btn ${translucent ? 'is-active primary' : ''}" data-action="toggle-translucency" aria-pressed="${!!translucent}">${translucent ? '✓ 已开启' : '○ 已关闭'}</button>
+        </div>
+      </section>
       <section class="setting-row"><div class="field"><label for="setting-auto-advance">自动前进</label><span>收录、跳过或删除后自动前进</span></div><input id="setting-auto-advance" type="checkbox" data-setting="autoAdvance" ${s?.autoAdvance !== false ? 'checked' : ''} aria-label="标记后自动前进" /></section>
       <button type="button" class="button muted settings-link" data-action="ai"><span><strong>AI 助手</strong><small>选择建议模式和模型来源</small></span><span aria-hidden="true">›</span></button>
       <button type="button" class="button muted settings-link" data-action="tags"><span><strong>标签管理</strong><small>调整标签名称和顺序</small></span><span aria-hidden="true">›</span></button>
@@ -381,7 +393,7 @@ const imageViewer=createImageViewer();
 const statusText={keep:'收录',skip:'跳过',reject:'删除'};
 function toast(message){const box=root.querySelector('#sg-toast');box.textContent=message;box.classList.add('visible');clearTimeout(toastTimer);toastTimer=setTimeout(()=>box.classList.remove('visible'),4500);}
 function saveIndicator(){const label=root.querySelector('#save-state');label.textContent=saveError?'保存失败 · 点击重试':saveCount?'保存中…':workspace?'已保存':'';label.classList.toggle('saving-error',!!saveError);label.dataset.action=saveError?'retry-save':'';}
-function applyAppearance(){root.dataset.theme=appearance.theme;root.style.colorScheme=appearance.theme;document.documentElement.style.colorScheme=appearance.theme;document.body.style.background=appearance.translucent?'transparent':appearance.theme==='dark'?'#202630':'#f0f4fa';root.classList.toggle('translucent',appearance.translucent);const b=root.querySelector('.app-chrome [data-action=toggle-theme]');b.textContent=appearance.theme==='dark'?'☾':'☀';b.setAttribute('aria-label',appearance.theme==='dark'?'切换日间模式':'切换暗夜模式');root.querySelector('.app-chrome [data-action=toggle-translucency]').setAttribute('aria-pressed',String(appearance.translucent));}
+function applyAppearance(){root.dataset.theme=appearance.theme;root.style.colorScheme=appearance.theme;document.documentElement.style.colorScheme=appearance.theme;document.body.style.background=appearance.translucent?'transparent':appearance.theme==='dark'?'#0c1017':'#f1f5f9';root.classList.toggle('translucent',appearance.translucent);const b=root.querySelector('.app-chrome [data-action=toggle-theme]');if(b){b.textContent=appearance.theme==='dark'?'☾':'☀';b.setAttribute('title',appearance.theme==='dark'?'当前：深色模式，点击切换为浅色':'当前：浅色模式，点击切换为深色');b.setAttribute('aria-label',appearance.theme==='dark'?'切换为浅色模式':'切换为深色模式');}const tb=root.querySelector('.app-chrome [data-action=toggle-translucency]');if(tb){tb.setAttribute('aria-pressed',String(appearance.translucent));tb.setAttribute('title',appearance.translucent?'液态玻璃：已开启，点击关闭':'液态玻璃：已关闭，点击开启');}}
 function payload(){return{settings:Object.fromEntries(settingsKeys.map(k=>[k,s[k]])),items:photos.map(p=>({id:p.id,status:p.status||null,tags:[...p.tags],deleteReviewed:!!p.deleteReviewed}))};}
 function persist(){if(!workspace)return Promise.resolve();const id=workspace.id,data=payload();syncRecentProject();activePlan=null;saveCount++;saveIndicator();pending=pending.catch(()=>{}).then(()=>api.save(id,data)).then(()=>{saveError=null},error=>{saveError=error;toast('进度未保存：'+error.message)}).finally(()=>{saveCount--;saveIndicator()});return pending;}
 function syncRecentProject(){if(!workspace)return;const row={id:workspace.id,name:s.name,sourceDir:workspace.sourceDir,total:photos.length,processed:photos.filter(p=>p.status).length};const i=recent.findIndex(p=>p.id===row.id);if(i>=0)recent[i]={...recent[i],...row};else recent.unshift(row);renderProjectSidebar({recent,activeId:workspace.id,busy:!!busy||s.view==='processing'});}
@@ -447,6 +459,7 @@ async function action(a){
  if(busy||s.view==='processing')return;
  if(a==='toggle-sidebar'){toggleProjectSidebar();return;}
  if(a==='close-sidebar'){toggleProjectSidebar(false);return;}
+ if(a==='set-theme-light'||a==='set-theme-dark'){appearance.theme=a==='set-theme-dark'?'dark':'light';applyAppearance();await api.appearance(appearance);if(s.view==='settings')render();return;}
  if(a==='toggle-theme'||a==='toggle-translucency'){if(a==='toggle-theme')appearance.theme=appearance.theme==='light'?'dark':'light';else appearance.translucent=!appearance.translucent;applyAppearance();await api.appearance(appearance);if(s.view==='settings')render();return;}
  if(a==='choose-folder'){await flush();await withBusy('正在扫描照片与视频…',async()=>{const w=await api.choose();if(w){acceptWorkspace(w,'setup');recent=await api.list()}});return;}
  if(a==='home'){await flush();recent=await api.list();changeView('home');return;}
@@ -482,6 +495,10 @@ async function action(a){
  if(a==='accept-suggestion'){const p=photos[s.index];if(available(p)){snapshot();p.tags=[...new Set([...p.tags,...(p.suggestedTags||[])])];render();persist()}return;}
 }
 function report(error){console.error(error);toast(error.message||'操作失败');}
+root.addEventListener('pointermove',e=>{
+ const el=e.target.closest('.button, .review-btn, .overview-card, .project-row, .camera-param-bar, .tag-chip, .sidebar-new-project, .overview-mode-toggle .button, .droplet-btn');
+ if(el){const r=el.getBoundingClientRect();el.style.setProperty('--mouse-x',`${(e.clientX-r.left).toFixed(1)}px`);el.style.setProperty('--mouse-y',`${(e.clientY-r.top).toFixed(1)}px`);}
+});
 root.addEventListener('click',e=>{if(busy||s.view==='processing')return;const target=e.target.closest('button,[data-action]');if(!target)return;
  if(target.dataset.projectSettings){openWorkspace(target.dataset.projectSettings,'setup').catch(report);return;}
  if(target.dataset.workspace){openWorkspace(target.dataset.workspace).catch(report);return;}
