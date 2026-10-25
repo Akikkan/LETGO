@@ -77,14 +77,36 @@ function createInspector() {
         </div>
       </section>
 
-      <!-- 2. Dominant Color Palette -->
-      <section class="inspector-section inspector-palette-section">
+      <!-- 2. Dominant Color & Tone Harmony Compass -->
+      <section class="inspector-section inspector-tone-section">
         <div class="inspector-section-head">
-          <label>画面主色调色板</label>
-          <small class="inspector-sub">点击可复制 HEX</small>
+          <label>色彩与影调罗盘</label>
+          <span class="inspector-tone-badge" id="inspector-tone-badge">分析中…</span>
+        </div>
+        <div class="tone-compass-box">
+          <div class="temp-bar-header">
+            <span class="temp-label cool-label"><span class="temp-dot cool-dot"></span>冷调 <strong id="cool-pct-val">--%</strong></span>
+            <span class="temp-ratio-title">冷暖色温倾向</span>
+            <span class="temp-label warm-label"><strong id="warm-pct-val">--%</strong> 暖调<span class="temp-dot warm-dot"></span></span>
+          </div>
+          <div class="temp-balance-track">
+            <div class="temp-cool-fill" id="temp-cool-fill" style="width: 50%;"></div>
+            <div class="temp-warm-fill" id="temp-warm-fill" style="width: 50%;"></div>
+            <div class="temp-pointer" id="temp-pointer" style="left: 50%;"></div>
+          </div>
+          <div class="tone-indicators-row">
+            <div class="tone-key-card">
+              <span class="tone-ind-label">影调倾向</span>
+              <strong class="tone-ind-val" id="tone-key-val">计算中…</strong>
+            </div>
+            <div class="tone-key-card">
+              <span class="tone-ind-label">饱和度风格</span>
+              <strong class="tone-ind-val" id="tone-sat-val">计算中…</strong>
+            </div>
+          </div>
         </div>
         <div class="inspector-palette-chips" id="inspector-palette-list">
-          <div class="palette-loading">正在提取画面色彩…</div>
+          <div class="palette-loading">正在提取画面主色调…</div>
         </div>
       </section>
 
@@ -187,6 +209,10 @@ function createInspector() {
 
       let shadowCount = 0;
       let highlightCount = 0;
+      let warmPixels = 0;
+      let coolPixels = 0;
+      let totalLum = 0;
+      let totalSat = 0;
 
       // Color quantization map for palette extraction (bucket by 5-bit RGB)
       const colorBuckets = new Map();
@@ -196,6 +222,27 @@ function createInspector() {
         const g = data[i + 1];
         const b = data[i + 2];
         const lum = Math.round(0.299 * r + 0.587 * g + 0.114 * b);
+        totalLum += lum;
+
+        const max = Math.max(r, g, b);
+        const min = Math.min(r, g, b);
+        const delta = max - min;
+        const sat = max === 0 ? 0 : delta / max;
+        totalSat += sat;
+
+        // Color temperature categorization (HSV Hue angle)
+        if (sat > 0.12 && lum > 18 && lum < 248) {
+          let hue = 0;
+          if (delta > 0) {
+            if (max === r) hue = ((g - b) / delta) % 6;
+            else if (max === g) hue = (b - r) / delta + 2;
+            else hue = (r - g) / delta + 4;
+            hue = Math.round(hue * 60);
+            if (hue < 0) hue += 360;
+          }
+          if (hue >= 330 || hue <= 68) warmPixels++;
+          else if (hue >= 165 && hue <= 270) coolPixels++;
+        }
 
         rHist[r]++;
         gHist[g]++;
@@ -229,6 +276,52 @@ function createInspector() {
         highlightEl.textContent = `● 高光: ${highlightPct}%`;
         highlightEl.classList.toggle('has-clipping', Number(highlightPct) >= 3.0);
       }
+
+      // 3. Update Cold vs Warm Compass & Tone Keying
+      const colorTempTotal = coolPixels + warmPixels;
+      let coolPct = 50;
+      let warmPct = 50;
+      if (colorTempTotal > 0) {
+        coolPct = Math.round((coolPixels / colorTempTotal) * 100);
+        warmPct = 100 - coolPct;
+      }
+
+      const avgLum = totalLum / totalPixels;
+      let toneKey = '均衡中调 (Mid-Tone)';
+      if (avgLum >= 155) toneKey = '高调明朗 (High-Key)';
+      else if (avgLum <= 92) toneKey = '低调深沉 (Low-Key)';
+
+      const avgSat = totalSat / totalPixels;
+      let satVibe = '自然胶片 (中饱和)';
+      if (avgSat < 0.18) satVibe = '日系微灰 (低饱和)';
+      else if (avgSat > 0.42) satVibe = '电影鲜活 (高饱和)';
+
+      let moodBadge = '自然胶片色调';
+      if (coolPct >= 65) moodBadge = '清透冷调 · 蔚蓝海滨';
+      else if (warmPct >= 65) moodBadge = '暖金落日 · 暖色温';
+      else if (Math.abs(coolPct - warmPct) <= 18 && colorTempTotal >= 800) moodBadge = '经典橙青 · 电影冷暖';
+      else if (avgLum >= 160) moodBadge = '通透高光 · 日系空气感';
+      else if (avgLum <= 85) moodBadge = '深邃低调 · 电影暗光';
+
+      const badgeEl = sidebar.querySelector('#inspector-tone-badge');
+      if (badgeEl) badgeEl.textContent = moodBadge;
+
+      const coolValEl = sidebar.querySelector('#cool-pct-val');
+      const warmValEl = sidebar.querySelector('#warm-pct-val');
+      if (coolValEl) coolValEl.textContent = `${coolPct}%`;
+      if (warmValEl) warmValEl.textContent = `${warmPct}%`;
+
+      const coolFillEl = sidebar.querySelector('#temp-cool-fill');
+      const warmFillEl = sidebar.querySelector('#temp-warm-fill');
+      const pointerEl = sidebar.querySelector('#temp-pointer');
+      if (coolFillEl) coolFillEl.style.width = `${coolPct}%`;
+      if (warmFillEl) warmFillEl.style.width = `${warmPct}%`;
+      if (pointerEl) pointerEl.style.left = `${coolPct}%`;
+
+      const toneKeyEl = sidebar.querySelector('#tone-key-val');
+      const toneSatEl = sidebar.querySelector('#tone-sat-val');
+      if (toneKeyEl) toneKeyEl.textContent = toneKey;
+      if (toneSatEl) toneSatEl.textContent = satVibe;
 
       // 3. Extract Dominant Color Palette (Top 5 diverse colors)
       const sorted = [...colorBuckets.entries()].sort((a, b) => b[1] - a[1]);
@@ -324,11 +417,9 @@ function createInspector() {
     }
 
     list.innerHTML = palette.map(p => {
-      // Determine contrast text for badge
-      const lum = 0.299 * p.r + 0.587 * p.g + 0.114 * p.b;
-      const textCol = lum > 140 ? '#0f172a' : '#ffffff';
-      return `<button type="button" class="palette-swatch" data-action="copy-color" data-color="${p.hex}" title="点击复制颜色 ${p.hex}">
+      return `<button type="button" class="palette-swatch" data-action="copy-color" data-color="${p.hex}" title="点击复制颜色 ${p.hex} (占比 ${p.pct}%)">
         <span class="swatch-color" style="background:${p.hex}"></span>
+        <span class="swatch-pct">${p.pct}%</span>
         <span class="swatch-code">${p.hex}</span>
       </button>`;
     }).join('');
