@@ -154,6 +154,25 @@ async function action(a, target){
  if(a==='cancel-tag'){s.newTag=false;render();return;}
  if(a==='toggle-ai'){changeView('ai');return;}
  if(a==='zoom'){imageViewer.reset();return;}
+ if(a==='show-camera-info'){
+  const p=photos[s.index];
+  if(p){
+   const info=[
+    p.camera?`📷 ${p.camera}`:(p.kind==='video'?'🎬 视频素材':'📷 相机'),
+    p.focal35?`焦距 ${p.focal35}`:null,
+    p.aperture?`光圈 ${p.aperture}`:null,
+    p.shutter?`快门 ${p.shutter}`:null,
+    p.iso?(String(p.iso).startsWith('ISO')?p.iso:`ISO ${p.iso}`):null,
+    p.ev?`曝光 ${p.ev}`:null,
+    p.cct?`色温 ${p.cct}`:null,
+    (p.width&&p.height)?`${p.width}×${p.height}`:null,
+    p.recordedAt?`拍摄于 ${p.recordedAt.replace('T',' ')}`:null,
+    p.name?`${p.name}`:null
+   ].filter(Boolean);
+   toast(info.join(' · '));
+  }
+  return;
+ }
  if(a==='prev'||a==='next'){const queue=s.reviewMode==='reject'?photos.map((p,i)=>p.status==='reject'&&!p.archived?i:-1).filter(i=>i>=0):photos.map((_p,i)=>i);s.index=queue[Math.max(0,Math.min(queue.length-1,queue.indexOf(s.index)+(a==='next'?1:-1)))]??0;s.zoom=false;render();return;}
  if(a==='play'){const v=page.querySelector('video');if(v){if(v.paused)await v.play();else v.pause()}return;}
  if(a==='undo'){const h=history.pop();if(!h)return;photos.forEach((p,i)=>Object.assign(p,h.items[i]));s.tags=h.tags;s.index=h.index;s.reviewMode=h.reviewMode;s.view='review';render();persist();return;}

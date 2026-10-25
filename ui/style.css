@@ -1211,9 +1211,9 @@ html, body {
   color: light-dark(#a6332f, #ffaaa6) !important;
 }
 
-/* Floating Camera Parameter Bar (Restrained Lake Placid Blue Accents) */
+/* Floating Camera Parameter Bar (Restrained Low-Saturation Frosted Glass) */
 #shiguang .camera-param-bar {
-  position: absolute;
+  position: absolute !important;
   left: 14px;
   bottom: 14px;
   display: inline-flex;
@@ -1221,18 +1221,19 @@ html, body {
   gap: 8px;
   padding: 6px 16px;
   border-radius: 9999px;
-  background: light-dark(rgba(255, 255, 255, 0.85), rgba(18, 24, 34, 0.88));
+  background: light-dark(rgba(255, 255, 255, 0.82), rgba(18, 24, 34, 0.85));
   backdrop-filter: blur(24px) saturate(160%);
   -webkit-backdrop-filter: blur(24px) saturate(160%);
   border: 1px solid var(--glint);
-  box-shadow: 0 6px 20px var(--shade), inset 0 1px 1px var(--glint);
+  box-shadow: 0 4px 18px var(--shade), inset 0 1px 1px var(--glint);
   font-size: 11px;
   font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
   color: var(--ink);
   z-index: 5;
   pointer-events: auto;
   user-select: none;
-  transition: transform .18s cubic-bezier(0.2, 0, 0.1, 1), box-shadow .18s ease;
+  cursor: pointer;
+  transition: transform .18s cubic-bezier(0.2, 0, 0.1, 1), box-shadow .18s ease, border-color .18s ease;
 }
 
 #shiguang .camera-param-bar:hover {
@@ -1352,7 +1353,6 @@ html, body {
 #shiguang .tag-chip,
 #shiguang .sidebar-new-project,
 #shiguang .overview-card,
-#shiguang .camera-param-bar,
 #shiguang .project-row,
 #shiguang .theme-segment-btn,
 #shiguang .toggle-translucent-btn,
