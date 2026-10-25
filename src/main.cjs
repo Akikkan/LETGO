@@ -3,7 +3,7 @@ const fs=require('node:fs/promises'),nodeFs=require('node:fs'),path=require('nod
 async function safeRealpath(target){try{return await fs.realpath(target)}catch(e){if(e.code==='EPERM'){return new Promise((resolve,reject)=>nodeFs.realpath(target,(err,res)=>err?reject(err):resolve(res)))}throw e;}}
 const {createStore}=require('./workspace.cjs');
 const {readMetadata}=require('./metadata.cjs');
-app.setName('拾光');
+app.setName('LETGO');
 const testMode=!app.isPackaged&&process.env.SHIGUANG_TEST==='1';
 if(testMode&&process.env.SHIGUANG_TEST_DATA)app.setPath('userData',process.env.SHIGUANG_TEST_DATA);
 protocol.registerSchemesAsPrivileged([
@@ -47,9 +47,9 @@ async function main(){
  await fs.mkdir(app.getPath('userData'),{recursive:true});try{const p=JSON.parse(await fs.readFile(path.join(app.getPath('userData'),'appearance.json'),'utf8'));preferences={theme:p.theme==='dark'?'dark':'light',translucent:p.translucent!==false,colorTheme:p.colorTheme||'codex',customAccent:p.customAccent||null,keepColor:p.keepColor||null};}catch{}
  store=createStore({dataDir:path.join(app.getPath('userData'),'workspaces'),readMetadata,trashItem:async file=>{if(testMode){const dir=path.join(app.getPath('userData'),'test-trash');await fs.mkdir(dir,{recursive:true});await fs.rename(file,path.join(dir,Date.now()+'-'+path.basename(file)));}else await shell.trashItem(file);},onProgress:value=>{if(win&&!win.isDestroyed())win.webContents.send('workspace:progress',value);}});
  await registerProtocols();installHandlers();session.defaultSession.setPermissionRequestHandler((_wc,_permission,callback)=>callback(false));session.defaultSession.setPermissionCheckHandler(()=>false);
- win=new BrowserWindow({title:'拾光',width:1280,height:900,minWidth:780,minHeight:640,show:!testMode,backgroundColor:preferences.translucent?'#00000000':(preferences.theme==='dark'?'#202630':'#f0f4fa'),backgroundMaterial:process.platform==='win32'&&preferences.translucent?'acrylic':undefined,vibrancy:process.platform==='darwin'&&preferences.translucent?'under-window':undefined,autoHideMenuBar:true,webPreferences:{preload:path.join(__dirname,'preload.cjs'),contextIsolation:true,nodeIntegration:false,sandbox:true,webSecurity:true,backgroundThrottling:false,devTools:!app.isPackaged}});
+ win=new BrowserWindow({title:'LETGO',width:1280,height:900,minWidth:780,minHeight:640,show:!testMode,backgroundColor:preferences.translucent?'#00000000':(preferences.theme==='dark'?'#202630':'#f0f4fa'),backgroundMaterial:process.platform==='win32'&&preferences.translucent?'acrylic':undefined,vibrancy:process.platform==='darwin'&&preferences.translucent?'under-window':undefined,autoHideMenuBar:true,webPreferences:{preload:path.join(__dirname,'preload.cjs'),contextIsolation:true,nodeIntegration:false,sandbox:true,webSecurity:true,backgroundThrottling:false,devTools:!app.isPackaged}});
  win.webContents.setWindowOpenHandler(()=>({action:'deny'}));win.webContents.on('will-navigate',(event,url)=>{if(url!=='sgapp://ui/index.html')event.preventDefault()});
  win.on('close',event=>{if(working){event.preventDefault();dialog.showMessageBox(win,{message:'正在整理素材，请等待本次操作结束。',buttons:['好']});}});
  applyNativeAppearance();await win.loadURL('sgapp://ui/index.html');
 }
-if(!app.requestSingleInstanceLock())app.quit();else{app.on('second-instance',()=>{if(win){if(win.isMinimized())win.restore();win.show();win.focus()}});app.whenReady().then(main).catch(error=>{dialog.showErrorBox('拾光无法启动',error.stack||error.message);app.quit()});app.on('window-all-closed',()=>app.quit());}
+if(!app.requestSingleInstanceLock())app.quit();else{app.on('second-instance',()=>{if(win){if(win.isMinimized())win.restore();win.show();win.focus()}});app.whenReady().then(main).catch(error=>{dialog.showErrorBox('LETGO无法启动',error.stack||error.message);app.quit()});app.on('window-all-closed',()=>app.quit());}

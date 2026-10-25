@@ -1,8 +1,8 @@
 {
-  "name": "shiguang",
-  "productName": "拾光",
+  "name": "letgo",
+  "productName": "LETGO",
   "version": "0.2.0",
-  "description": "本地照片与视频整理工具",
+  "description": "翻片 LETGO - 极简随性的照片与视频挑选整理工具",
   "private": true,
   "main": "src/main.cjs",
   "scripts": {
