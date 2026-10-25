@@ -371,6 +371,9 @@ function createStore({ dataDir, trashItem, onProgress = () => {}, readMetadata }
           cct: meta.cct || old?.cct || null,
           width: meta.width || old?.width || null,
           height: meta.height || old?.height || null,
+          latitude: meta.latitude || old?.latitude || null,
+          longitude: meta.longitude || old?.longitude || null,
+          altitude: meta.altitude || old?.altitude || null,
           suggestedTags: combinedSuggested,
           ...(old?.suggestedStatus ? { suggestedStatus: old.suggestedStatus } : {})
         });

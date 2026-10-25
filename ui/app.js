@@ -181,12 +181,10 @@ function renderReview(s, photos) {
   const statusLabels = { keep: '✓ 收录', skip: '↷ 跳过', reject: '⌫ 删除' };
   const keepText = reviewReject ? '恢复收录' : '收录';
   const rejectText = reviewReject ? '确认删除' : '删除';
-  const hasParams = Boolean(photo.camera || photo.focal35 || photo.aperture || photo.shutter || photo.iso || photo.ev || photo.cct || (photo.width && photo.height));
-  const paramBarHTML = hasParams ? `<button type="button" class="camera-param-bar" data-action="show-camera-info" aria-label="拍摄参数" title="点击查看完整拍摄与曝光信息"><span class="param-badge-camera">📷 ${esc(photo.camera || (isVideo ? '视频素材' : '相机'))}</span>${photo.focal35 ? `<span class="param-badge">${esc(photo.focal35)}</span>` : ''}${photo.aperture ? `<span class="param-badge">${esc(photo.aperture)}</span>` : ''}${photo.shutter ? `<span class="param-badge">${esc(photo.shutter)}</span>` : ''}${photo.iso ? `<span class="param-badge">${esc(String(photo.iso).startsWith('ISO') ? photo.iso : `ISO ${photo.iso}`)}</span>` : ''}${photo.ev ? `<span class="param-badge">${esc(photo.ev)}</span>` : ''}${photo.cct ? `<span class="param-badge">${esc(photo.cct)}</span>` : ''}${photo.width && photo.height ? `<span class="param-badge">${photo.width}×${photo.height}</span>` : ''}</button>` : '';
 
   return `<section class="review" aria-label="照片整理"><div class="review-shell">
   <header class="review-head"><div class="review-name">${esc(s?.name || '')}${reviewReject ? '<span class="review-mode">删除复审</span>' : ''}</div><button class="review-mini" data-action="compare" aria-label="照片对比" data-tooltip="照片对比">◫</button><button class="review-mini" data-action="overview" aria-label="素材清单" data-tooltip="素材清单">☷</button><div class="review-progress" aria-label="已处理 ${processed} 张，共 ${total} 张"><strong>${processed}</strong><span>/ ${total}</span><span class="review-bar" role="progressbar" aria-valuemin="0" aria-valuemax="${total}" aria-valuenow="${processed}"><span class="review-bar-fill" style="width:${total ? Math.min(100, processed / total * 100) : 0}%"></span></span>${complete ? '<span class="review-done" aria-label="全部完成">🏆</span>' : ''}</div></header>
-  <div class="review-photo" aria-label="${isVideo ? '视频预览' : '照片预览'}"><div class="image-viewport">${media}${photo.status && statusLabels[photo.status] ? `<span class="review-status">${statusLabels[photo.status]}</span>` : ''}${!isVideo&&photo.src?`<div class="image-minimap" aria-label="当前图片可见范围" hidden><img class="minimap-image" src="${esc(photo.src)}" alt="" draggable="false"><span class="minimap-window"></span></div>`:''}${paramBarHTML}</div>${!isVideo&&photo.src?'<div class="image-zoom-controls" aria-label="图片缩放"><button type="button" data-zoom="out" aria-label="缩小图片">−</button><div class="zoom-track"><input class="zoom-slider" type="range" min="-100" max="100" step="1" value="0" aria-label="图片缩放" aria-valuetext="适应窗口"></div><button type="button" data-zoom="in" aria-label="放大图片">＋</button><button type="button" class="zoom-value" data-zoom="reset" aria-label="重置为适应窗口">适应</button></div>':''}</div>
+  <div class="review-photo" aria-label="${isVideo ? '视频预览' : '照片预览'}"><div class="image-viewport">${media}${photo.status && statusLabels[photo.status] ? `<span class="review-status">${statusLabels[photo.status]}</span>` : ''}${!isVideo&&photo.src?`<div class="image-minimap" aria-label="当前图片可见范围" hidden><img class="minimap-image" src="${esc(photo.src)}" alt="" draggable="false"><span class="minimap-window"></span></div>`:''}</div>${!isVideo&&photo.src?'<div class="image-zoom-controls" aria-label="图片缩放"><button type="button" data-zoom="out" aria-label="缩小图片">−</button><div class="zoom-track"><input class="zoom-slider" type="range" min="-100" max="100" step="1" value="0" aria-label="图片缩放" aria-valuetext="适应窗口"></div><button type="button" data-zoom="in" aria-label="放大图片">＋</button><button type="button" class="zoom-value" data-zoom="reset" aria-label="重置为适应窗口">适应</button></div>':''}</div>
   <div class="review-dock"><div class="review-tag-row" aria-label="照片标签">${tagButtons}<button type="button" class="review-new-tag" data-action="new-tag" aria-label="新建标签（Shift+Q）" data-tooltip="新建标签 · Shift+Q">+</button><button type="button" class="review-ai-toggle" data-action="toggle-ai" aria-pressed="${!!s?.ai}" aria-label="AI ${s?.ai ? '已开启' : '关闭'}"><span class="review-ai-dot"></span><span>AI</span></button></div>
   <nav class="review-actions" aria-label="照片操作"><button type="button" class="review-btn primary" data-action="keep" aria-label="${keepText}（F）" ${total ? '' : 'disabled'}><span class="review-icon">✓</span>${keepText} <kbd>F</kbd></button><button type="button" class="review-btn" data-action="skip" aria-label="跳过（D）" ${total ? '' : 'disabled'}><span class="review-icon">↷</span>跳过 <kbd>D</kbd></button><button type="button" class="review-btn" data-action="reject" aria-label="${rejectText}（X）" ${total ? '' : 'disabled'}><span class="review-icon">⌫</span>${rejectText} <kbd>X</kbd></button><button type="button" class="review-btn" data-action="undo" aria-label="撤销">↶</button><span class="review-spacer"></span><span class="review-nav"><button type="button" class="review-btn" data-action="prev" aria-label="上一张" ${index <= 0 ? 'disabled' : ''}>←</button><span class="review-count">${total ? index + 1 : 0} / ${total}</span><button type="button" class="review-btn" data-action="next" aria-label="下一张" ${index >= total - 1 ? 'disabled' : ''}>→</button></span><button type="button" class="review-btn" data-action="finish-review" aria-label="处理${processed ? `（${processed}）` : ''}">处理${processed ? ` ${processed}` : ''}</button></nav></div>
 </div></section>`;
@@ -314,7 +312,7 @@ function renderAI(s, photos) {
 
 function renderHelp(s) {
   const keys = [
-    ['F', '收录'], ['D', '跳过'], ['X', '删除'], ['Q / W / E / R / T / Y', '添加对应标签'], ['Shift + Q', '新建标签'], ['Ctrl / ⌘ + Z', '撤销'], ['← / →', '上一张 / 下一张'], ['空格', '播放 / 暂停视频'], ['J / L', '视频快退 / 快进']
+    ['F', '收录'], ['D', '跳过'], ['X', '删除'], ['I', '展开 / 收起素材检查器'], ['滚轮', '以光标为中心放大 / 缩小图片'], ['Q / W / E / R / T / Y', '添加对应标签'], ['Shift + Q', '新建标签'], ['Ctrl / ⌘ + Z', '撤销'], ['← / →', '上一张 / 下一张'], ['空格', '播放 / 暂停视频'], ['J / L', '视频快退 / 快进']
   ];
   return `<section class="flow-page help-page" aria-label="快捷键"><header class="flow-header"><button type="button" class="button muted" data-action="back" aria-label="返回">← 返回</button><div><div class="flow-eyebrow">${String(s?.name ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]))}</div><h1>快捷键</h1></div></header><div class="form-grid shortcut-table" role="table" aria-label="整理快捷键">${keys.map(([key, action]) => `<div class="setting-row" role="row"><span role="cell"><kbd>${key}</kbd></span><span role="cell">${action}</span></div>`).join('')}</div></section>`;
 }
@@ -413,6 +411,328 @@ projectSidebarMedia.addEventListener('change', () => {
   syncProjectSidebarButton();
 });
 
+// Inspector sidebar for real-time EXIF, histogram, RGB distribution, and dominant color palette
+function createInspector() {
+  const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  let currentPhoto = null;
+  let canvas = null;
+  let ctx = null;
+
+  function render(photo, isOpen) {
+    currentPhoto = photo;
+    if (!photo) {
+      return `<div class="inspector-empty"><span class="inspector-empty-icon">ℹ</span><p>暂无素材信息</p></div>`;
+    }
+
+    const isVideo = photo.kind === 'video';
+    const cameraName = photo.camera || (isVideo ? '视频素材' : '标准相机');
+    const lensName = photo.lens || (photo.camera ? '内置定焦镜头' : '--');
+    const focalText = photo.focal35 || photo.focalLength || '--';
+    const apertureText = photo.aperture || '--';
+    const shutterText = photo.shutter || '--';
+    const isoText = photo.iso ? (String(photo.iso).startsWith('ISO') ? photo.iso : `ISO ${photo.iso}`) : '--';
+    const evText = photo.ev || '0.0 EV';
+    const cctText = photo.cct || '--';
+
+    const dims = (photo.width && photo.height) ? `${photo.width} × ${photo.height}` : '--';
+    const mp = (photo.width && photo.height) ? `${((photo.width * photo.height) / 1000000).toFixed(1)} MP` : null;
+    const sizeMB = photo.size ? `${(photo.size / (1024 * 1024)).toFixed(1)} MB` : '--';
+    const ext = (photo.extension || (isVideo ? 'mp4' : 'jpg')).toUpperCase();
+    const timeText = photo.capturedAt ? photo.capturedAt.replace('T', ' ') : (photo.mtimeMs ? new Date(photo.mtimeMs).toLocaleString() : '--');
+
+    // GPS location computation
+    let gpsHTML = '';
+    if (photo.latitude != null && photo.longitude != null) {
+      const lat = Number(photo.latitude);
+      const lon = Number(photo.longitude);
+      const latRef = lat >= 0 ? 'N' : 'S';
+      const lonRef = lon >= 0 ? 'E' : 'W';
+      const coordStr = `${Math.abs(lat).toFixed(4)}° ${latRef}, ${Math.abs(lon).toFixed(4)}° ${lonRef}`;
+
+      // Region hint for Japan trip
+      let regionHint = 'GPS 坐标定位';
+      if (lat >= 35.25 && lat <= 35.38 && lon >= 139.45 && lon <= 139.60) regionHint = '📍 日本 · 镰仓 / 相模湾';
+      else if (lat >= 35.55 && lat <= 35.80 && lon >= 139.60 && lon <= 139.90) regionHint = '📍 日本 · 东京 / 涩谷·新宿';
+      else if (lat >= 34.90 && lat <= 35.15 && lon >= 135.65 && lon <= 135.85) regionHint = '📍 日本 · 京都 / 鸭川·祇园';
+      else if (lat >= 34.55 && lat <= 34.80 && lon >= 135.40 && lon <= 135.60) regionHint = '📍 日本 · 大阪 / 难波';
+      else if (lat >= 30.0 && lat <= 46.0 && lon >= 128.0 && lon <= 146.0) regionHint = '📍 日本 旅拍坐标';
+
+      gpsHTML = `<div class="inspector-card inspector-gps-card">
+        <div class="inspector-card-title">
+          <span>${regionHint}</span>
+          <button type="button" class="inspector-copy-btn" data-action="copy-gps" data-coord="${esc(coordStr)}" title="复制经纬度坐标">复制</button>
+        </div>
+        <div class="inspector-gps-coords">${coordStr}</div>
+        ${photo.altitude != null ? `<div class="inspector-gps-alt">海拔 ${photo.altitude} 米</div>` : ''}
+      </div>`;
+    }
+
+    return `<header class="inspector-header">
+      <div class="inspector-title-row">
+        <span class="inspector-icon">◫</span>
+        <h2>素材检查器</h2>
+        <button type="button" class="inspector-close-btn" data-action="toggle-inspector" aria-label="收起检查器" title="收起检查器 (I)">✕</button>
+      </div>
+    </header>
+    <div class="inspector-scroll">
+      <!-- 1. Real-time Luminance & RGB Histogram -->
+      <section class="inspector-section inspector-hist-section">
+        <div class="inspector-section-head">
+          <label>直方图与峰值表</label>
+          <span class="inspector-hist-badge">RGB / 亮度</span>
+        </div>
+        <div class="inspector-canvas-box">
+          <canvas class="inspector-histogram-canvas" width="256" height="88" aria-label="RGB 与亮度直方图"></canvas>
+          <div class="inspector-clipping-row">
+            <span class="clipping-pill shadow-pill" id="shadow-clipping">● 暗部: 0.0%</span>
+            <span class="clipping-pill highlight-pill" id="highlight-clipping">● 高光: 0.0%</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- 2. Dominant Color Palette -->
+      <section class="inspector-section inspector-palette-section">
+        <div class="inspector-section-head">
+          <label>画面主色调色板</label>
+          <small class="inspector-sub">点击可复制 HEX</small>
+        </div>
+        <div class="inspector-palette-chips" id="inspector-palette-list">
+          <div class="palette-loading">正在提取画面色彩…</div>
+        </div>
+      </section>
+
+      <!-- 3. Core Exposure & Camera HUD -->
+      <section class="inspector-section">
+        <div class="inspector-section-head">
+          <label>拍摄与曝光参数</label>
+          <span class="inspector-cam-tag">${esc(cameraName)}</span>
+        </div>
+        <div class="inspector-exposure-grid">
+          <div class="exposure-pill">
+            <span class="exposure-label">焦距</span>
+            <strong class="exposure-val">${esc(focalText)}</strong>
+          </div>
+          <div class="exposure-pill">
+            <span class="exposure-label">光圈</span>
+            <strong class="exposure-val">${esc(apertureText)}</strong>
+          </div>
+          <div class="exposure-pill">
+            <span class="exposure-label">快门</span>
+            <strong class="exposure-val">${esc(shutterText)}</strong>
+          </div>
+          <div class="exposure-pill">
+            <span class="exposure-label">ISO</span>
+            <strong class="exposure-val">${esc(isoText)}</strong>
+          </div>
+        </div>
+        <div class="inspector-mini-params">
+          <div class="mini-param-row"><span>曝光补偿</span><strong>${esc(evText)}</strong></div>
+          <div class="mini-param-row"><span>白平衡色温</span><strong>${esc(cctText)}</strong></div>
+          <div class="mini-param-row"><span>镜头信息</span><strong title="${esc(lensName)}">${esc(lensName)}</strong></div>
+        </div>
+      </section>
+
+      <!-- 4. GPS Location Card (if available) -->
+      ${gpsHTML}
+
+      <!-- 5. File & Tech Details -->
+      <section class="inspector-section">
+        <div class="inspector-section-head">
+          <label>素材基础信息</label>
+        </div>
+        <div class="inspector-info-list">
+          <div class="info-row"><span>文件名</span><strong class="filename-text" title="${esc(photo.name)}">${esc(photo.name)}</strong></div>
+          <div class="info-row"><span>格式规格</span><strong>${ext}${mp ? ` · ${mp}` : ''}</strong></div>
+          <div class="info-row"><span>分辨率</span><strong>${dims}</strong></div>
+          <div class="info-row"><span>文件大小</span><strong>${sizeMB}</strong></div>
+          <div class="info-row"><span>拍摄时间</span><strong>${esc(timeText)}</strong></div>
+          <div class="info-row"><span>路径</span><strong class="path-text" title="${esc(photo.relativePath)}">${esc(photo.relativePath)}</strong></div>
+        </div>
+      </section>
+    </div>`;
+  }
+
+  function updateAnalysis(imgOrVideoElement) {
+    if (!imgOrVideoElement) return;
+    const sidebar = document.getElementById('inspector-sidebar');
+    if (!sidebar || sidebar.clientWidth < 10) return;
+
+    canvas = sidebar.querySelector('.inspector-histogram-canvas');
+    if (!canvas) return;
+    ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    // Use a small offscreen canvas to sample pixels quickly (under 2ms)
+    try {
+      const sampleW = 100;
+      const sampleH = 100;
+      const offscreen = document.createElement('canvas');
+      offscreen.width = sampleW;
+      offscreen.height = sampleH;
+      const offCtx = offscreen.getContext('2d');
+      if (!offCtx) return;
+
+      offCtx.drawImage(imgOrVideoElement, 0, 0, sampleW, sampleH);
+      const imgData = offCtx.getImageData(0, 0, sampleW, sampleH);
+      const data = imgData.data;
+      const totalPixels = sampleW * sampleH;
+
+      const rHist = new Float32Array(256);
+      const gHist = new Float32Array(256);
+      const bHist = new Float32Array(256);
+      const lHist = new Float32Array(256);
+
+      let shadowCount = 0;
+      let highlightCount = 0;
+
+      // Color quantization map for palette extraction (bucket by 5-bit RGB)
+      const colorBuckets = new Map();
+
+      for (let i = 0; i < data.length; i += 4) {
+        const r = data[i];
+        const g = data[i + 1];
+        const b = data[i + 2];
+        const lum = Math.round(0.299 * r + 0.587 * g + 0.114 * b);
+
+        rHist[r]++;
+        gHist[g]++;
+        bHist[b]++;
+        lHist[lum]++;
+
+        if (lum <= 4) shadowCount++;
+        if (lum >= 251) highlightCount++;
+
+        // Quantize to 32 steps (32*8=256)
+        const qr = (r >> 3) << 3;
+        const qg = (g >> 3) << 3;
+        const qb = (b >> 3) << 3;
+        const key = (qr << 16) | (qg << 8) | qb;
+        colorBuckets.set(key, (colorBuckets.get(key) || 0) + 1);
+      }
+
+      // 1. Draw Histogram
+      drawHistogram(rHist, gHist, bHist, lHist, totalPixels);
+
+      // 2. Update Clipping Badges
+      const shadowPct = ((shadowCount / totalPixels) * 100).toFixed(1);
+      const highlightPct = ((highlightCount / totalPixels) * 100).toFixed(1);
+      const shadowEl = sidebar.querySelector('#shadow-clipping');
+      const highlightEl = sidebar.querySelector('#highlight-clipping');
+      if (shadowEl) {
+        shadowEl.textContent = `● 暗部: ${shadowPct}%`;
+        shadowEl.classList.toggle('has-clipping', Number(shadowPct) >= 3.0);
+      }
+      if (highlightEl) {
+        highlightEl.textContent = `● 高光: ${highlightPct}%`;
+        highlightEl.classList.toggle('has-clipping', Number(highlightPct) >= 3.0);
+      }
+
+      // 3. Extract Dominant Color Palette (Top 5 diverse colors)
+      const sorted = [...colorBuckets.entries()].sort((a, b) => b[1] - a[1]);
+      const palette = [];
+      for (const [key, count] of sorted) {
+        const r = (key >> 16) & 0xff;
+        const g = (key >> 8) & 0xff;
+        const b = key & 0xff;
+
+        // Check color distance against already chosen palette colors to ensure diversity
+        const tooClose = palette.some(p => {
+          const dr = p.r - r;
+          const dg = p.g - g;
+          const db = p.b - b;
+          return Math.sqrt(dr * dr + dg * dg + db * db) < 38;
+        });
+
+        if (!tooClose) {
+          const hex = `#${[r, g, b].map(v => v.toString(16).padStart(2, '0')).join('').toUpperCase()}`;
+          const pct = Math.round((count / totalPixels) * 100);
+          palette.push({ r, g, b, hex, pct });
+          if (palette.length >= 5) break;
+        }
+      }
+
+      renderPalette(sidebar, palette);
+    } catch {
+      // Cross-origin or detached media error suppressed
+    }
+  }
+
+  function drawHistogram(rHist, gHist, bHist, lHist, totalPixels) {
+    if (!canvas || !ctx) return;
+    const w = canvas.width;
+    const h = canvas.height;
+    ctx.clearRect(0, 0, w, h);
+
+    // Subtle background grid
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(w * 0.25, 0); ctx.lineTo(w * 0.25, h);
+    ctx.moveTo(w * 0.50, 0); ctx.lineTo(w * 0.50, h);
+    ctx.moveTo(w * 0.75, 0); ctx.lineTo(w * 0.75, h);
+    ctx.moveTo(0, h * 0.5); ctx.lineTo(w, h * 0.5);
+    ctx.stroke();
+
+    // Find max for scaling
+    let max = 1;
+    for (let i = 0; i < 256; i++) {
+      if (lHist[i] > max) max = lHist[i];
+      if (rHist[i] > max) max = rHist[i];
+      if (gHist[i] > max) max = gHist[i];
+      if (bHist[i] > max) max = bHist[i];
+    }
+
+    const drawChannel = (hist, strokeStyle, fillStyle) => {
+      ctx.beginPath();
+      ctx.moveTo(0, h);
+      for (let i = 0; i < 256; i++) {
+        const x = (i / 255) * w;
+        const val = Math.min(1, hist[i] / max);
+        const y = h - val * (h - 6);
+        ctx.lineTo(x, y);
+      }
+      ctx.lineTo(w, h);
+      ctx.closePath();
+      if (fillStyle) {
+        ctx.fillStyle = fillStyle;
+        ctx.fill();
+      }
+      ctx.strokeStyle = strokeStyle;
+      ctx.lineWidth = 1.2;
+      ctx.stroke();
+    };
+
+    // Draw RGB and Luminance layers
+    ctx.globalCompositeOperation = 'screen';
+    drawChannel(rHist, 'rgba(239, 68, 68, 0.85)', 'rgba(239, 68, 68, 0.22)');
+    drawChannel(gHist, 'rgba(34, 197, 94, 0.85)', 'rgba(34, 197, 94, 0.20)');
+    drawChannel(bHist, 'rgba(59, 130, 246, 0.85)', 'rgba(59, 130, 246, 0.22)');
+    ctx.globalCompositeOperation = 'source-over';
+    drawChannel(lHist, 'rgba(255, 255, 255, 0.90)', 'rgba(255, 255, 255, 0.12)');
+  }
+
+  function renderPalette(sidebar, palette) {
+    const list = sidebar.querySelector('#inspector-palette-list');
+    if (!list) return;
+    if (!palette.length) {
+      list.innerHTML = `<span class="inspector-sub">无法提取调色板</span>`;
+      return;
+    }
+
+    list.innerHTML = palette.map(p => {
+      // Determine contrast text for badge
+      const lum = 0.299 * p.r + 0.587 * p.g + 0.114 * p.b;
+      const textCol = lum > 140 ? '#0f172a' : '#ffffff';
+      return `<button type="button" class="palette-swatch" data-action="copy-color" data-color="${p.hex}" title="点击复制颜色 ${p.hex}">
+        <span class="swatch-color" style="background:${p.hex}"></span>
+        <span class="swatch-code">${p.hex}</span>
+      </button>`;
+    }).join('');
+  }
+
+  return { render, updateAnalysis };
+}
+
 // Image coordinates stay independent of window size. The centre value always fits.
 function createImageViewer(){
  let key=null,position=0,focusX=.5,focusY=.5,viewport=null,img=null,slider=null,mini=null,windowBox=null,observer=null,drag=null;
@@ -477,6 +797,8 @@ let s={view:'home',tags:[],index:0},history=[],backStack=[],activePlan=null,resu
 let pending=Promise.resolve(),saveCount=0,saveError=null,toastTimer;
 const settingsKeys=['name','trip','collection','tags','autoAdvance','aiMode','archiveMode'];
 const imageViewer=createImageViewer();
+const inspector=createInspector();
+let inspectorOpen=true;
 const statusText={keep:'收录',skip:'跳过',reject:'删除'};
 
 const COLOR_PRESETS={
@@ -520,6 +842,13 @@ function applyAppearance(){
     tb.setAttribute('aria-pressed',String(appearance.translucent));
     tb.setAttribute('title',appearance.translucent?'液态玻璃：已开启，点击关闭':'液态玻璃：已关闭，点击开启');
   }
+  const ib=root.querySelector('#inspector-toggle');
+  if(ib){
+    ib.classList.toggle('is-active',inspectorOpen);
+    ib.setAttribute('aria-expanded',String(inspectorOpen));
+    ib.setAttribute('title',inspectorOpen?'收起素材检查器 (I)':'展开素材检查器 (I)');
+  }
+  root.classList.toggle('inspector-collapsed',!inspectorOpen);
 
   const p=COLOR_PRESETS[appearance.colorTheme]||COLOR_PRESETS.codex;
   const isDark=appearance.theme==='dark';
@@ -577,6 +906,20 @@ function render(){
   const p=photos[s.index];if(p?.archived||p?.missing){const media=page.querySelector('.image-viewport');media.innerHTML=`<div class="unavailable"><span>${p.archivedAction==='trash'?'已移入回收站':p.archivedAction==='move'?'已移动至收录目录':'源文件不可用，请重新扫描'}</span><span>${esc(p.name)}</span></div>`;for(const b of page.querySelectorAll('[data-action=keep],[data-action=skip],[data-action=reject],[data-tag]'))b.disabled=true;}
   if(available(p)&&p.kind==='photo')imageViewer.mount(page,workspace.id+':'+p.id);else{const zoom=page.querySelector('.image-zoom-controls');if(zoom)zoom.hidden=true;}
   const current=page.querySelector('video');if(current&&oldVideoState?.src===current.getAttribute('src'))current.addEventListener('loadedmetadata',()=>{current.currentTime=Math.min(oldVideoState.time,current.duration||0);if(!oldVideoState.paused)current.play().catch(()=>{})},{once:true});
+  const inspSidebar=root.querySelector('#inspector-sidebar');
+  if(inspSidebar){
+   inspSidebar.innerHTML=inspector.render(p,inspectorOpen);
+   const mediaEl=page.querySelector('.review-image, .review-video');
+   if(mediaEl){
+    if(mediaEl.tagName==='IMG'&&mediaEl.complete&&mediaEl.naturalWidth){
+     setTimeout(()=>inspector.updateAnalysis(mediaEl),15);
+    }else if(mediaEl.tagName==='IMG'){
+     mediaEl.addEventListener('load',()=>inspector.updateAnalysis(mediaEl),{once:true});
+    }else if(mediaEl.tagName==='VIDEO'){
+     mediaEl.addEventListener('loadeddata',()=>inspector.updateAnalysis(mediaEl),{once:true});
+    }
+   }
+  }
  }
  if(s.newTag){page.insertAdjacentHTML('beforeend','<div class="tag-dialog" role="dialog" aria-modal="true" aria-label="新建标签"><form id="tag-form"><input id="tag-name" maxlength="40" aria-label="标签名称" placeholder="标签名称" autocomplete="off"><button type="button" class="button" data-action="cancel-tag">取消</button><button class="button primary" type="submit">添加</button></form></div>');page.querySelector('#tag-name').focus();}
  if(busy)page.insertAdjacentHTML('beforeend',`<div class="busy-overlay" role="status"><span>${esc(typeof busy==='string'?busy:'正在处理…')}</span></div>`);
@@ -606,6 +949,36 @@ async function action(a, target){
  if(busy||s.view==='processing')return;
  if(a==='toggle-sidebar'){toggleProjectSidebar();return;}
  if(a==='close-sidebar'){toggleProjectSidebar(false);return;}
+ if(a==='toggle-inspector'){
+  inspectorOpen=!inspectorOpen;
+  applyAppearance();
+  if(s.view==='review'){
+   const inspSidebar=root.querySelector('#inspector-sidebar');
+   if(inspSidebar){
+    const p=photos[s.index];
+    inspSidebar.innerHTML=inspector.render(p,inspectorOpen);
+    const mediaEl=page.querySelector('.review-image, .review-video');
+    if(mediaEl&&mediaEl.complete)inspector.updateAnalysis(mediaEl);
+   }
+  }
+  return;
+ }
+ if(a==='copy-color'){
+  const c=target?.dataset?.color;
+  if(c){
+   navigator.clipboard?.writeText(c).catch(()=>{});
+   toast(`已复制色彩代码: ${c}`);
+  }
+  return;
+ }
+ if(a==='copy-gps'){
+  const coord=target?.dataset?.coord;
+  if(coord){
+   navigator.clipboard?.writeText(coord).catch(()=>{});
+   toast(`已复制 GPS 坐标: ${coord}`);
+  }
+  return;
+ }
  if(a==='set-theme-light'||a==='set-theme-dark'){appearance.theme=a==='set-theme-dark'?'dark':'light';applyAppearance();await api.appearance(appearance);if(s.view==='settings')render();return;}
  if(a==='toggle-theme'||a==='toggle-translucency'){if(a==='toggle-theme')appearance.theme=appearance.theme==='light'?'dark':'light';else appearance.translucent=!appearance.translucent;applyAppearance();await api.appearance(appearance);if(s.view==='settings')render();return;}
  if(a==='set-preset-theme'){const p=target?.dataset.preset;if(p&&COLOR_PRESETS[p]){appearance.colorTheme=p;appearance.customAccent=null;appearance.keepColor=null;applyAppearance();await api.appearance(appearance);if(s.view==='settings')render();toast(`已应用色彩预设`);}return;}
@@ -694,7 +1067,7 @@ root.addEventListener('change',e=>{const el=e.target;if(busy)return;if(el.datase
 });
 root.addEventListener('submit',e=>{e.preventDefault();if(e.target.id!=='tag-form')return;const name=page.querySelector('#tag-name').value.trim();if(!name)return;snapshot();if(!s.tags.includes(name))s.tags.push(name);s.newTag=false;render();persist();});
 root.addEventListener('error',e=>{if(e.target.classList.contains('minimap-image')){e.target.parentElement.hidden=true;return;}if(['IMG','VIDEO'].includes(e.target.tagName)){e.target.outerHTML='<div class="unavailable"><span>暂时无法预览此格式</span><span>可以跳过，或在原文件夹中查看</span><button class="button" data-action="reveal">打开源文件夹</button></div>';}},true);
-document.addEventListener('keydown',e=>{if(busy||s.view==='processing'||e.isComposing||e.repeat)return;if(s.newTag){if(e.key==='Escape'){s.newTag=false;render()}if(e.key==='Tab'){const els=[...page.querySelectorAll('.tag-dialog input,.tag-dialog button')],at=els.indexOf(document.activeElement);e.preventDefault();els[(at+(e.shiftKey?-1:1)+els.length)%els.length].focus()}return;}const key=e.key.toLowerCase();const range=e.target.matches('input[type=range]');if((/INPUT|TEXTAREA|SELECT/.test(e.target.tagName)&&(!range||['arrowleft','arrowright','arrowup','arrowdown','home','end','pageup','pagedown'].includes(key)))||e.target.isContentEditable)return;if((e.ctrlKey||e.metaKey)&&key==='z'){e.preventDefault();action('undo').catch(report);return}if(e.ctrlKey||e.metaKey||e.altKey||s.view!=='review')return;if(e.shiftKey&&key==='q'){e.preventDefault();action('new-tag');return}const i='qwerty'.indexOf(key);if(key.length===1&&i>=0&&!e.shiftKey){e.preventDefault();if(s.tags[i])toggleTag(s.tags[i]);return}const a={f:'keep',d:'skip',x:'reject',arrowleft:'prev',arrowright:'next','?':'help',' ':'play'}[key];if(a){e.preventDefault();action(a).catch(report)}if(['j','l'].includes(key)){const v=page.querySelector('video');if(v){e.preventDefault();v.currentTime=Math.max(0,Math.min(v.duration||0,v.currentTime+(key==='j'?-5:5)))}}});
+document.addEventListener('keydown',e=>{if(busy||s.view==='processing'||e.isComposing||e.repeat)return;if(s.newTag){if(e.key==='Escape'){s.newTag=false;render()}if(e.key==='Tab'){const els=[...page.querySelectorAll('.tag-dialog input,.tag-dialog button')],at=els.indexOf(document.activeElement);e.preventDefault();els[(at+(e.shiftKey?-1:1)+els.length)%els.length].focus()}return;}const key=e.key.toLowerCase();const range=e.target.matches('input[type=range]');if((/INPUT|TEXTAREA|SELECT/.test(e.target.tagName)&&(!range||['arrowleft','arrowright','arrowup','arrowdown','home','end','pageup','pagedown'].includes(key)))||e.target.isContentEditable)return;if((e.ctrlKey||e.metaKey)&&key==='z'){e.preventDefault();action('undo').catch(report);return}if(e.ctrlKey||e.metaKey||e.altKey||s.view!=='review')return;if(e.shiftKey&&key==='q'){e.preventDefault();action('new-tag');return}const i='qwerty'.indexOf(key);if(key.length===1&&i>=0&&!e.shiftKey){e.preventDefault();if(s.tags[i])toggleTag(s.tags[i]);return}const a={f:'keep',d:'skip',x:'reject',arrowleft:'prev',arrowright:'next','?':'help',' ':'play',i:'toggle-inspector'}[key];if(a){e.preventDefault();action(a).catch(report)}if(['j','l'].includes(key)){const v=page.querySelector('video');if(v){e.preventDefault();v.currentTime=Math.max(0,Math.min(v.duration||0,v.currentTime+(key==='j'?-5:5)))}}});
 api.onProgress(p=>{if(p.workspaceId!==workspace?.id)return;if(p.phase==='scan'||p.phase==='plan'){const label=page.querySelector('.busy-overlay span');if(label)label.textContent=`${p.phase==='scan'?'正在扫描':'正在校验'} · ${p.current||''}`;return;}s.view='processing';s.progress=p;render();});
 window.addEventListener('beforeunload',e=>{if(saveCount||saveError){e.preventDefault();e.returnValue='';toast('请等待进度保存完成后再关闭')}});
 api.bootstrap().then(data=>{appearance=data.preferences;recent=data.recent;render()}).catch(report);

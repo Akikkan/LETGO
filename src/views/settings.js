@@ -120,7 +120,7 @@ function renderAI(s, photos) {
 
 function renderHelp(s) {
   const keys = [
-    ['F', '收录'], ['D', '跳过'], ['X', '删除'], ['Q / W / E / R / T / Y', '添加对应标签'], ['Shift + Q', '新建标签'], ['Ctrl / ⌘ + Z', '撤销'], ['← / →', '上一张 / 下一张'], ['空格', '播放 / 暂停视频'], ['J / L', '视频快退 / 快进']
+    ['F', '收录'], ['D', '跳过'], ['X', '删除'], ['I', '展开 / 收起素材检查器'], ['滚轮', '以光标为中心放大 / 缩小图片'], ['Q / W / E / R / T / Y', '添加对应标签'], ['Shift + Q', '新建标签'], ['Ctrl / ⌘ + Z', '撤销'], ['← / →', '上一张 / 下一张'], ['空格', '播放 / 暂停视频'], ['J / L', '视频快退 / 快进']
   ];
   return `<section class="flow-page help-page" aria-label="快捷键"><header class="flow-header"><button type="button" class="button muted" data-action="back" aria-label="返回">← 返回</button><div><div class="flow-eyebrow">${String(s?.name ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]))}</div><h1>快捷键</h1></div></header><div class="form-grid shortcut-table" role="table" aria-label="整理快捷键">${keys.map(([key, action]) => `<div class="setting-row" role="row"><span role="cell"><kbd>${key}</kbd></span><span role="cell">${action}</span></div>`).join('')}</div></section>`;
 }

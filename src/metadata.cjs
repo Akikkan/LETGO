@@ -130,6 +130,7 @@ function parseTiff(buffer, base) {
 
   const result = { orientation: 1 };
   const visited = new Set();
+  let gpsLatRef, gpsLat, gpsLonRef, gpsLon;
   const readIfd = (relativeOffset, kind) => {
     if (!Number.isSafeInteger(relativeOffset) || relativeOffset < 8 || visited.has(relativeOffset)) return;
     const ifd = base + relativeOffset;
@@ -151,6 +152,17 @@ function parseTiff(buffer, base) {
       }
       if (tag === 0x8825 && kind === 'main') {
         gpsIfd = readU32(buffer, entry + 8, little);
+        continue;
+      }
+      if (kind === 'gps') {
+        if (tag === 0x0001 && type === 2) gpsLatRef = readAsciiEntry(buffer, base, entry, n, little);
+        if (tag === 0x0002 && type === 5) gpsLat = readRationals(buffer, base, entry, 3, little);
+        if (tag === 0x0003 && type === 2) gpsLonRef = readAsciiEntry(buffer, base, entry, n, little);
+        if (tag === 0x0004 && type === 5) gpsLon = readRationals(buffer, base, entry, 3, little);
+        if (tag === 0x0006 && type === 5) {
+          const alt = readRational(buffer, base, entry, little);
+          if (alt != null) result.altitude = Math.round(alt);
+        }
         continue;
       }
       if (tag === 0x0100 && kind === 'main') {
@@ -212,6 +224,14 @@ function parseTiff(buffer, base) {
   };
 
   readIfd(firstIfd, 'main');
+  if (gpsLat && gpsLat.length === 3) {
+    const lat = gpsLat[0] + gpsLat[1] / 60 + gpsLat[2] / 3600;
+    result.latitude = Number((gpsLatRef === 'S' ? -lat : lat).toFixed(6));
+  }
+  if (gpsLon && gpsLon.length === 3) {
+    const lon = gpsLon[0] + gpsLon[1] / 60 + gpsLon[2] / 3600;
+    result.longitude = Number((gpsLonRef === 'W' ? -lon : lon).toFixed(6));
+  }
   if (!result.capturedAt && result.width == null && result.height == null && !result.make && !result.model) return {};
   if (!result.width || !result.height) {
     delete result.width;
@@ -257,6 +277,19 @@ function readRational(buffer, base, entry, little) {
   const den = readU32(buffer, base + offset + 4, little);
   if (!den) return null;
   return num / den;
+}
+
+function readRationals(buffer, base, entry, count, little) {
+  const offset = readU32(buffer, entry + 8, little);
+  if (offset === null || base + offset + count * 8 > buffer.length) return [];
+  const list = [];
+  for (let i = 0; i < count; i += 1) {
+    const num = readU32(buffer, base + offset + i * 8, little);
+    const den = readU32(buffer, base + offset + i * 8 + 4, little);
+    if (!den) return [];
+    list.push(num / den);
+  }
+  return list;
 }
 
 function readSRational(buffer, base, entry, little) {

@@ -5,6 +5,8 @@ let s={view:'home',tags:[],index:0},history=[],backStack=[],activePlan=null,resu
 let pending=Promise.resolve(),saveCount=0,saveError=null,toastTimer;
 const settingsKeys=['name','trip','collection','tags','autoAdvance','aiMode','archiveMode'];
 const imageViewer=createImageViewer();
+const inspector=createInspector();
+let inspectorOpen=true;
 const statusText={keep:'收录',skip:'跳过',reject:'删除'};
 
 const COLOR_PRESETS={
@@ -48,6 +50,13 @@ function applyAppearance(){
     tb.setAttribute('aria-pressed',String(appearance.translucent));
     tb.setAttribute('title',appearance.translucent?'液态玻璃：已开启，点击关闭':'液态玻璃：已关闭，点击开启');
   }
+  const ib=root.querySelector('#inspector-toggle');
+  if(ib){
+    ib.classList.toggle('is-active',inspectorOpen);
+    ib.setAttribute('aria-expanded',String(inspectorOpen));
+    ib.setAttribute('title',inspectorOpen?'收起素材检查器 (I)':'展开素材检查器 (I)');
+  }
+  root.classList.toggle('inspector-collapsed',!inspectorOpen);
 
   const p=COLOR_PRESETS[appearance.colorTheme]||COLOR_PRESETS.codex;
   const isDark=appearance.theme==='dark';
@@ -105,6 +114,20 @@ function render(){
   const p=photos[s.index];if(p?.archived||p?.missing){const media=page.querySelector('.image-viewport');media.innerHTML=`<div class="unavailable"><span>${p.archivedAction==='trash'?'已移入回收站':p.archivedAction==='move'?'已移动至收录目录':'源文件不可用，请重新扫描'}</span><span>${esc(p.name)}</span></div>`;for(const b of page.querySelectorAll('[data-action=keep],[data-action=skip],[data-action=reject],[data-tag]'))b.disabled=true;}
   if(available(p)&&p.kind==='photo')imageViewer.mount(page,workspace.id+':'+p.id);else{const zoom=page.querySelector('.image-zoom-controls');if(zoom)zoom.hidden=true;}
   const current=page.querySelector('video');if(current&&oldVideoState?.src===current.getAttribute('src'))current.addEventListener('loadedmetadata',()=>{current.currentTime=Math.min(oldVideoState.time,current.duration||0);if(!oldVideoState.paused)current.play().catch(()=>{})},{once:true});
+  const inspSidebar=root.querySelector('#inspector-sidebar');
+  if(inspSidebar){
+   inspSidebar.innerHTML=inspector.render(p,inspectorOpen);
+   const mediaEl=page.querySelector('.review-image, .review-video');
+   if(mediaEl){
+    if(mediaEl.tagName==='IMG'&&mediaEl.complete&&mediaEl.naturalWidth){
+     setTimeout(()=>inspector.updateAnalysis(mediaEl),15);
+    }else if(mediaEl.tagName==='IMG'){
+     mediaEl.addEventListener('load',()=>inspector.updateAnalysis(mediaEl),{once:true});
+    }else if(mediaEl.tagName==='VIDEO'){
+     mediaEl.addEventListener('loadeddata',()=>inspector.updateAnalysis(mediaEl),{once:true});
+    }
+   }
+  }
  }
  if(s.newTag){page.insertAdjacentHTML('beforeend','<div class="tag-dialog" role="dialog" aria-modal="true" aria-label="新建标签"><form id="tag-form"><input id="tag-name" maxlength="40" aria-label="标签名称" placeholder="标签名称" autocomplete="off"><button type="button" class="button" data-action="cancel-tag">取消</button><button class="button primary" type="submit">添加</button></form></div>');page.querySelector('#tag-name').focus();}
  if(busy)page.insertAdjacentHTML('beforeend',`<div class="busy-overlay" role="status"><span>${esc(typeof busy==='string'?busy:'正在处理…')}</span></div>`);
@@ -134,6 +157,36 @@ async function action(a, target){
  if(busy||s.view==='processing')return;
  if(a==='toggle-sidebar'){toggleProjectSidebar();return;}
  if(a==='close-sidebar'){toggleProjectSidebar(false);return;}
+ if(a==='toggle-inspector'){
+  inspectorOpen=!inspectorOpen;
+  applyAppearance();
+  if(s.view==='review'){
+   const inspSidebar=root.querySelector('#inspector-sidebar');
+   if(inspSidebar){
+    const p=photos[s.index];
+    inspSidebar.innerHTML=inspector.render(p,inspectorOpen);
+    const mediaEl=page.querySelector('.review-image, .review-video');
+    if(mediaEl&&mediaEl.complete)inspector.updateAnalysis(mediaEl);
+   }
+  }
+  return;
+ }
+ if(a==='copy-color'){
+  const c=target?.dataset?.color;
+  if(c){
+   navigator.clipboard?.writeText(c).catch(()=>{});
+   toast(`已复制色彩代码: ${c}`);
+  }
+  return;
+ }
+ if(a==='copy-gps'){
+  const coord=target?.dataset?.coord;
+  if(coord){
+   navigator.clipboard?.writeText(coord).catch(()=>{});
+   toast(`已复制 GPS 坐标: ${coord}`);
+  }
+  return;
+ }
  if(a==='set-theme-light'||a==='set-theme-dark'){appearance.theme=a==='set-theme-dark'?'dark':'light';applyAppearance();await api.appearance(appearance);if(s.view==='settings')render();return;}
  if(a==='toggle-theme'||a==='toggle-translucency'){if(a==='toggle-theme')appearance.theme=appearance.theme==='light'?'dark':'light';else appearance.translucent=!appearance.translucent;applyAppearance();await api.appearance(appearance);if(s.view==='settings')render();return;}
  if(a==='set-preset-theme'){const p=target?.dataset.preset;if(p&&COLOR_PRESETS[p]){appearance.colorTheme=p;appearance.customAccent=null;appearance.keepColor=null;applyAppearance();await api.appearance(appearance);if(s.view==='settings')render();toast(`已应用色彩预设`);}return;}
@@ -222,7 +275,7 @@ root.addEventListener('change',e=>{const el=e.target;if(busy)return;if(el.datase
 });
 root.addEventListener('submit',e=>{e.preventDefault();if(e.target.id!=='tag-form')return;const name=page.querySelector('#tag-name').value.trim();if(!name)return;snapshot();if(!s.tags.includes(name))s.tags.push(name);s.newTag=false;render();persist();});
 root.addEventListener('error',e=>{if(e.target.classList.contains('minimap-image')){e.target.parentElement.hidden=true;return;}if(['IMG','VIDEO'].includes(e.target.tagName)){e.target.outerHTML='<div class="unavailable"><span>暂时无法预览此格式</span><span>可以跳过，或在原文件夹中查看</span><button class="button" data-action="reveal">打开源文件夹</button></div>';}},true);
-document.addEventListener('keydown',e=>{if(busy||s.view==='processing'||e.isComposing||e.repeat)return;if(s.newTag){if(e.key==='Escape'){s.newTag=false;render()}if(e.key==='Tab'){const els=[...page.querySelectorAll('.tag-dialog input,.tag-dialog button')],at=els.indexOf(document.activeElement);e.preventDefault();els[(at+(e.shiftKey?-1:1)+els.length)%els.length].focus()}return;}const key=e.key.toLowerCase();const range=e.target.matches('input[type=range]');if((/INPUT|TEXTAREA|SELECT/.test(e.target.tagName)&&(!range||['arrowleft','arrowright','arrowup','arrowdown','home','end','pageup','pagedown'].includes(key)))||e.target.isContentEditable)return;if((e.ctrlKey||e.metaKey)&&key==='z'){e.preventDefault();action('undo').catch(report);return}if(e.ctrlKey||e.metaKey||e.altKey||s.view!=='review')return;if(e.shiftKey&&key==='q'){e.preventDefault();action('new-tag');return}const i='qwerty'.indexOf(key);if(key.length===1&&i>=0&&!e.shiftKey){e.preventDefault();if(s.tags[i])toggleTag(s.tags[i]);return}const a={f:'keep',d:'skip',x:'reject',arrowleft:'prev',arrowright:'next','?':'help',' ':'play'}[key];if(a){e.preventDefault();action(a).catch(report)}if(['j','l'].includes(key)){const v=page.querySelector('video');if(v){e.preventDefault();v.currentTime=Math.max(0,Math.min(v.duration||0,v.currentTime+(key==='j'?-5:5)))}}});
+document.addEventListener('keydown',e=>{if(busy||s.view==='processing'||e.isComposing||e.repeat)return;if(s.newTag){if(e.key==='Escape'){s.newTag=false;render()}if(e.key==='Tab'){const els=[...page.querySelectorAll('.tag-dialog input,.tag-dialog button')],at=els.indexOf(document.activeElement);e.preventDefault();els[(at+(e.shiftKey?-1:1)+els.length)%els.length].focus()}return;}const key=e.key.toLowerCase();const range=e.target.matches('input[type=range]');if((/INPUT|TEXTAREA|SELECT/.test(e.target.tagName)&&(!range||['arrowleft','arrowright','arrowup','arrowdown','home','end','pageup','pagedown'].includes(key)))||e.target.isContentEditable)return;if((e.ctrlKey||e.metaKey)&&key==='z'){e.preventDefault();action('undo').catch(report);return}if(e.ctrlKey||e.metaKey||e.altKey||s.view!=='review')return;if(e.shiftKey&&key==='q'){e.preventDefault();action('new-tag');return}const i='qwerty'.indexOf(key);if(key.length===1&&i>=0&&!e.shiftKey){e.preventDefault();if(s.tags[i])toggleTag(s.tags[i]);return}const a={f:'keep',d:'skip',x:'reject',arrowleft:'prev',arrowright:'next','?':'help',' ':'play',i:'toggle-inspector'}[key];if(a){e.preventDefault();action(a).catch(report)}if(['j','l'].includes(key)){const v=page.querySelector('video');if(v){e.preventDefault();v.currentTime=Math.max(0,Math.min(v.duration||0,v.currentTime+(key==='j'?-5:5)))}}});
 api.onProgress(p=>{if(p.workspaceId!==workspace?.id)return;if(p.phase==='scan'||p.phase==='plan'){const label=page.querySelector('.busy-overlay span');if(label)label.textContent=`${p.phase==='scan'?'正在扫描':'正在校验'} · ${p.current||''}`;return;}s.view='processing';s.progress=p;render();});
 window.addEventListener('beforeunload',e=>{if(saveCount||saveError){e.preventDefault();e.returnValue='';toast('请等待进度保存完成后再关闭')}});
 api.bootstrap().then(data=>{appearance=data.preferences;recent=data.recent;render()}).catch(report);
