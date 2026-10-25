@@ -1,0 +1,16 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src sgmedia: data:; media-src sgmedia:; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'"><title>拾光</title><link rel="stylesheet" href="style.css"></head>
+<body><div id="shiguang" aria-label="拾光照片与视频整理">
+ <div class="app-body">
+  <aside id="project-sidebar" aria-label="项目历史">
+   <div class="sidebar-heading"><span class="sidebar-heading-label">项目</span><button class="sidebar-close" type="button" data-action="close-sidebar" aria-label="收起项目栏">‹</button></div>
+   <button class="sidebar-new-project" type="button" data-action="choose-folder"><span class="sidebar-new-icon">＋</span><span>新建项目</span></button>
+   <nav id="project-list" aria-label="最近项目"></nav>
+  </aside>
+  <div class="main-panel">
+   <button class="sidebar-backdrop" type="button" data-action="close-sidebar" aria-label="关闭项目栏" tabindex="-1"></button>
+   <div class="app-chrome"><button id="sidebar-toggle" class="button" type="button" data-action="toggle-sidebar" aria-controls="project-sidebar" aria-expanded="true" aria-label="收起项目栏" title="收起项目栏">☰</button><button class="brand" data-action="home" aria-label="工作区首页">拾光</button><span class="workspace-title"></span><span id="save-state" role="status"></span><button class="button" data-action="toggle-theme" aria-label="切换日间暗夜">☀</button><button class="button" data-action="toggle-translucency" aria-label="半透明" aria-pressed="true">◐</button><button class="button" data-action="choose-folder" aria-label="打开工作区">▱</button><button class="button" data-action="settings" aria-label="设置">⚙</button><button class="button" data-action="help" aria-label="快捷键">?</button></div>
+   <main id="sg-page"><section class="flow-page"><p class="muted">正在打开…</p></section></main><div id="sg-toast" role="status" aria-live="polite"></div>
+  </div>
+ </div>
+</div><script src="app.js"></script></body></html>
