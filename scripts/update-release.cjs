@@ -10,8 +10,11 @@ async function updateRelease() {
   await fs.mkdir(path.join(tempDir, 'ui'), { recursive: true });
 
   await fs.copyFile(path.join(root, 'package.json'), path.join(tempDir, 'package.json'));
-  for (const file of ['main.cjs', 'metadata.cjs', 'preload.cjs', 'workspace.cjs', 'image-viewer.js', 'image-viewer.css', 'project-sidebar.js', 'project-sidebar.css']) {
-    await fs.copyFile(path.join(root, 'src', file), path.join(tempDir, 'src', file));
+  for (const file of ['main.cjs', 'metadata.cjs', 'preload.cjs', 'workspace.cjs', 'image-viewer.js', 'image-viewer.css', 'project-sidebar.js', 'project-sidebar.css', 'icon.png']) {
+    const srcFile = path.join(root, 'src', file);
+    if (await fs.stat(srcFile).then(() => true, () => false)) {
+      await fs.copyFile(srcFile, path.join(tempDir, 'src', file));
+    }
   }
   for (const file of ['index.html', 'app.js', 'style.css']) {
     await fs.copyFile(path.join(root, 'ui', file), path.join(tempDir, 'ui', file));
