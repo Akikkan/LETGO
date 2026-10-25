@@ -107,6 +107,32 @@ function extractTimeFromName(name) {
   return `${y}-${m}-${d}T${h}:${min}:${sec}`;
 }
 
+function generateSmartTags(kind, meta) {
+  const tags = [];
+  if (meta?.model || meta?.camera) {
+    const cam = (meta.model || meta.camera).replace(/^DJI\s+/i, '').trim();
+    if (cam && cam.length <= 20) tags.push(cam);
+  }
+  if (meta?.focal35) {
+    const num = parseInt(meta.focal35, 10);
+    if (num && num <= 24) tags.push('超广角');
+    else if (num && num <= 35) tags.push('广角');
+    else if (num && num >= 70) tags.push('长焦');
+  }
+  if (meta?.fNumber && meta.fNumber <= 2.2) tags.push('大光圈');
+  if (meta?.iso && meta.iso >= 1600) tags.push('高感夜景');
+  if (meta?.shutter && !meta.shutter.startsWith('1/') && meta.shutter.endsWith('s')) {
+    const sec = parseFloat(meta.shutter);
+    if (sec >= 0.5) tags.push('慢门长曝');
+  }
+  if (kind === 'video') tags.push('视频');
+  if (meta?.width && meta?.height) {
+    if (meta.width >= 3840 || meta.height >= 3840) tags.push('4K');
+    if (meta.height > meta.width) tags.push('竖屏');
+  }
+  return tags;
+}
+
 function truncateUtf8(value, maxBytes) {
   let result = '';
   let bytes = 0;
@@ -308,10 +334,12 @@ function createStore({ dataDir, trashItem, onProgress = () => {}, readMetadata }
         if (!lst.isFile() || (!PHOTO_EXTENSIONS.has(extension) && !VIDEO_EXTENSIONS.has(extension))) continue;
         const rel = normalizeRelative(relative);
         let capturedAt = null;
+        let meta = {};
         if (readMetadata) {
           try {
-            const metadata = await readMetadata(candidate, { name: entry.name, relativePath: rel, extension });
-            capturedAt = typeof metadata === 'string' ? metadata : metadata?.capturedAt || metadata?.DateTimeOriginal || metadata?.dateTimeOriginal || null;
+            const raw = await readMetadata(candidate, { name: entry.name, relativePath: rel, extension });
+            if (raw && typeof raw === 'object') meta = raw;
+            capturedAt = typeof raw === 'string' ? raw : meta.capturedAt || meta.DateTimeOriginal || meta.dateTimeOriginal || null;
             if (capturedAt != null) capturedAt = String(capturedAt).slice(0, 80);
           } catch { capturedAt = null; }
         }
@@ -321,13 +349,29 @@ function createStore({ dataDir, trashItem, onProgress = () => {}, readMetadata }
         }
         const old = prior.get(rel);
         const unchanged = !!old && old.size === lst.size && old.mtimeMs === lst.mtimeMs;
+        const kind = VIDEO_EXTENSIONS.has(extension) ? 'video' : 'photo';
+        const smartTags = generateSmartTags(kind, meta);
+        const combinedSuggested = cleanTags([
+          ...(old?.suggestedTags || []),
+          ...smartTags
+        ]);
         found.push({
           id: digest(rel), name: entry.name, relativePath: rel, size: lst.size, mtimeMs: lst.mtimeMs,
-          extension: extension.slice(1), kind: VIDEO_EXTENSIONS.has(extension) ? 'video' : 'photo',
+          extension: extension.slice(1), kind,
           capturedAt: capturedAt || old?.capturedAt || null,
           status: unchanged && STATUSES.has(old.status) ? old.status : null,
           tags: old ? cleanTags(old.tags) : [], deleteReviewed: unchanged && !!old?.deleteReviewed,
-          ...(old?.suggestedTags ? { suggestedTags: cleanTags(old.suggestedTags) } : {}),
+          camera: meta.camera || old?.camera || null,
+          shutter: meta.shutter || old?.shutter || null,
+          aperture: meta.aperture || old?.aperture || null,
+          iso: meta.iso || old?.iso || null,
+          focal35: meta.focal35 || old?.focal35 || null,
+          focalLength: meta.focalLength || old?.focalLength || null,
+          ev: meta.ev || old?.ev || null,
+          cct: meta.cct || old?.cct || null,
+          width: meta.width || old?.width || null,
+          height: meta.height || old?.height || null,
+          suggestedTags: combinedSuggested,
           ...(old?.suggestedStatus ? { suggestedStatus: old.suggestedStatus } : {})
         });
         if (old && !unchanged) old._sourceChanged = true;

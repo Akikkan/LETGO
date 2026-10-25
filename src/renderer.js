@@ -29,7 +29,7 @@ function render(){
  else if(s.view==='setup')html=renderSetup(s,photos).replace('原型 · 路径与文件操作仅演示','').replace('工作区设置','整理设置')+`<div class="resume-tools"><button class="button" data-action="rescan">重新扫描</button><button class="button" data-action="reveal">打开源文件夹</button></div>`;
  else if(s.view==='review'){
   html=renderReview(s,photos);const p=photos[s.index];
-  if(p){const timeText=p.capturedAt?esc(p.capturedAt.replace('T',' ')):(p.mtimeMs?`文件时间 ${new Date(p.mtimeMs).toISOString().slice(0,19).replace('T',' ')}`:'未读取到拍摄时间');html+=`<div class="review-fileline"><span>${esc(p.relativePath)}</span><span>${timeText}</span></div>`;if(s.aiMode!=='off'&&p.suggestedTags?.length)html+=`<div class="suggestion-row"><span>AI 建议 · ${p.suggestedTags.map(esc).join(' · ')}</span><button class="button" data-action="accept-suggestion">采用标签</button></div>`;}
+  if(p){const timeText=p.capturedAt?esc(p.capturedAt.replace('T',' ')):(p.mtimeMs?`文件时间 ${new Date(p.mtimeMs).toISOString().slice(0,19).replace('T',' ')}`:'未读取到拍摄时间');html+=`<div class="review-fileline"><span>${esc(p.relativePath)}</span><span>${timeText}</span></div>`;const smartTags=(p.suggestedTags||[]).filter(t=>!p.tags?.includes(t));if(smartTags.length){html+=`<div class="suggestion-row"><span class="suggestion-label">推荐参数标签 ·</span>${smartTags.map(t=>`<button type="button" class="button tag-chip" data-quick-tag="${esc(t)}">＋ ${esc(t)}</button>`).join('')}</div>`;}}
  }else if(s.view==='confirm')html=renderArchive();
  else if(s.view==='processing')html=renderProgress();
  else if(s.view==='result')html=renderResultPage();
@@ -116,6 +116,7 @@ root.addEventListener('click',e=>{if(busy||s.view==='processing')return;const ta
  if(target.dataset.filter){s.filter=target.dataset.filter;s.listOffset=0;render();return;}
  if(target.dataset.photoIndex!==undefined){s.index=Number(target.dataset.photoIndex);changeView('review');return;}
  if(target.dataset.compareKeep!==undefined){const p=photos[Number(target.dataset.compareKeep)];if(available(p)){snapshot();p.status='keep';p.deleteReviewed=false;render();persist()}return;}
+  if(target.dataset.quickTag){const t=target.dataset.quickTag,p=photos[s.index];if(available(p)){snapshot();if(!p.tags.includes(t))p.tags=[...p.tags,t];render();persist();toast(`已添加标签：${t}`);}return;}
  if(target.dataset.addSuggested){const t=target.dataset.addSuggested;if(!s.tags.includes(t)){s.tags.push(t);persist();toast('已加入常用标签')}return;}
  if(target.dataset.tagUp!==undefined||target.dataset.tagDown!==undefined){const i=Number(target.dataset.tagUp??target.dataset.tagDown),j=i+(target.dataset.tagUp!==undefined?-1:1);if(s.tags[j]!==undefined){snapshot();[s.tags[i],s.tags[j]]=[s.tags[j],s.tags[i]];render();persist()}return;}
  if(target.dataset.action)action(target.dataset.action).catch(report);
