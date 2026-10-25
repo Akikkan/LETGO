@@ -7,21 +7,22 @@
   --muted: #475569;
   --line: rgba(15, 23, 42, 0.12);
   --line-strong: rgba(15, 23, 42, 0.22);
-  /* Japanese Fender Telecaster Lake Placid Blue (Restrained vintage metallic cyan-slate) */
-  --accent: #376a8d;
-  --accent-hover: #2b5674;
+  /* Codex & Japanese travel presets (Restrained low saturation) */
+  --accent: #3d7a68;
+  --accent-hover: #316254;
   --accent-contrast: #ffffff;
-  --accent-gradient: linear-gradient(175deg, #447b9f 0%, #2b5776 100%);
-  --soft: rgba(55, 106, 141, 0.10);
-  --soft-border: rgba(55, 106, 141, 0.22);
+  --accent-gradient: linear-gradient(175deg, #448975 0%, #326556 100%);
+  --accent-shadow: rgba(61, 122, 104, 0.22);
+  --soft: rgba(61, 122, 104, 0.08);
+  --soft-border: rgba(61, 122, 104, 0.18);
   --glass: rgba(255, 255, 255, 0.72);
-  --glass-dock: rgba(255, 255, 255, 0.68);
+  --glass-dock: rgba(255, 255, 255, 0.75);
   --glint: rgba(255, 255, 255, 0.90);
-  --shade: rgba(15, 23, 42, 0.08);
-  --droplet-bg: linear-gradient(180deg, rgba(255, 255, 255, 0.88) 0%, rgba(240, 245, 252, 0.72) 100%);
-  --droplet-border: rgba(255, 255, 255, 0.85);
-  --droplet-shadow: 0 4px 14px rgba(15, 23, 42, 0.06), inset 0 1.2px 1.2px rgba(255, 255, 255, 0.95), inset 0 -1px 2px rgba(0, 0, 0, 0.04);
-  --droplet-hover-shadow: 0 8px 24px rgba(55, 106, 141, 0.15), inset 0 1.5px 1.5px rgba(255, 255, 255, 1);
+  --shade: rgba(15, 23, 42, 0.05);
+  --droplet-bg: linear-gradient(180deg, rgba(255, 255, 255, 0.85) 0%, rgba(246, 250, 254, 0.70) 100%);
+  --droplet-border: rgba(255, 255, 255, 0.92);
+  --droplet-shadow: 0 3px 12px rgba(15, 23, 42, 0.04), inset 0 1px 1px rgba(255, 255, 255, 0.95), inset 0 -1px 1.5px rgba(0, 0, 0, 0.02);
+  --droplet-hover-shadow: 0 6px 20px rgba(15, 23, 42, 0.08), inset 0 1.2px 1.2px rgba(255, 255, 255, 1);
 }
 
 #shiguang[data-theme="dark"] {
@@ -33,21 +34,22 @@
   --muted: #94a3b8;
   --line: rgba(255, 255, 255, 0.12);
   --line-strong: rgba(255, 255, 255, 0.24);
-  /* Japanese Fender Telecaster Lake Placid Blue in Dark Mode (Metallic Ice Frost) */
-  --accent: #5e97be;
-  --accent-hover: #75abd0;
+  /* Calm Codex sage in Dark Mode */
+  --accent: #4e8e7c;
+  --accent-hover: #5ea08d;
   --accent-contrast: #ffffff;
-  --accent-gradient: linear-gradient(175deg, #4f86ab 0%, #305f80 100%);
-  --soft: rgba(94, 151, 190, 0.16);
-  --soft-border: rgba(94, 151, 190, 0.28);
-  --glass: rgba(22, 28, 38, 0.75);
+  --accent-gradient: linear-gradient(175deg, #589c8a 0%, #3e7465 100%);
+  --accent-shadow: rgba(78, 142, 124, 0.32);
+  --soft: rgba(78, 142, 124, 0.14);
+  --soft-border: rgba(78, 142, 124, 0.24);
+  --glass: rgba(22, 28, 38, 0.72);
   --glass-dock: rgba(24, 32, 44, 0.75);
-  --glint: rgba(255, 255, 255, 0.18);
-  --shade: rgba(0, 0, 0, 0.48);
-  --droplet-bg: linear-gradient(180deg, rgba(38, 48, 64, 0.78) 0%, rgba(24, 31, 42, 0.82) 100%);
-  --droplet-border: rgba(255, 255, 255, 0.16);
-  --droplet-shadow: 0 6px 18px rgba(0, 0, 0, 0.35), inset 0 1.2px 1.2px rgba(255, 255, 255, 0.25), inset 0 -1.5px 2px rgba(0, 0, 0, 0.4);
-  --droplet-hover-shadow: 0 8px 26px rgba(94, 151, 190, 0.22), inset 0 1.5px 1.5px rgba(255, 255, 255, 0.35);
+  --glint: rgba(255, 255, 255, 0.16);
+  --shade: rgba(0, 0, 0, 0.35);
+  --droplet-bg: linear-gradient(180deg, rgba(32, 41, 56, 0.72) 0%, rgba(20, 27, 38, 0.76) 100%);
+  --droplet-border: rgba(255, 255, 255, 0.14);
+  --droplet-shadow: 0 4px 14px rgba(0, 0, 0, 0.30), inset 0 1px 1px rgba(255, 255, 255, 0.18), inset 0 -1px 1.5px rgba(0, 0, 0, 0.30);
+  --droplet-hover-shadow: 0 6px 22px rgba(0, 0, 0, 0.42), inset 0 1.2px 1.2px rgba(255, 255, 255, 0.28);
 }
 
 #shiguang {
@@ -140,7 +142,7 @@
   outline-offset: 3px;
 }
 
-/* Primary Liquid Gem Droplet - Japanese Fender Telecaster Metallic Lacquer */
+/* Primary Liquid Gem Droplet - P3 Refined Low-Saturation Frosted Glass */
 #shiguang .button.primary,
 #shiguang .review button.primary,
 #shiguang .droplet-btn.primary,
@@ -148,17 +150,17 @@
 #shiguang .droplet-btn.is-active {
   background: var(--accent-gradient) !important;
   color: #ffffff !important;
-  border-color: rgba(255, 255, 255, 0.35) !important;
-  box-shadow: 0 4px 14px rgba(43, 87, 118, 0.35), inset 0 1.5px 1px rgba(255, 255, 255, 0.75), inset 0 -2px 3px rgba(0, 0, 0, 0.25) !important;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+  border-color: rgba(255, 255, 255, 0.40) !important;
+  box-shadow: 0 4px 14px var(--accent-shadow, rgba(61, 122, 104, 0.22)), inset 0 1.2px 1.2px rgba(255, 255, 255, 0.65), inset 0 -1.5px 2px rgba(0, 0, 0, 0.15) !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.20);
   font-weight: 600;
 }
 
 #shiguang .button.primary:hover:not(:disabled),
 #shiguang .review button.primary:hover:not(:disabled),
 #shiguang .droplet-btn.primary:hover:not(:disabled) {
-  box-shadow: 0 8px 22px rgba(43, 87, 118, 0.45), inset 0 1.5px 1.5px rgba(255, 255, 255, 0.9) !important;
-  transform: translateY(-2px) scale(1.025);
+  box-shadow: 0 6px 20px var(--accent-shadow, rgba(61, 122, 104, 0.35)), inset 0 1.5px 1.5px rgba(255, 255, 255, 0.85) !important;
+  transform: translateY(-2px) scale(1.02);
 }
 
 #shiguang .review {

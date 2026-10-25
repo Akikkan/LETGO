@@ -191,12 +191,12 @@ function renderReview(s, photos) {
 }
 
 const THEME_PRESETS = [
-  { id: 'codex', name: 'Codex 翠绿', color: '#10a37f', desc: 'OpenAI 极客翠绿终端美学' },
-  { id: 'telecaster', name: 'Fender 湖水蓝', color: '#376a8d', desc: '日产 Lake Placid Blue 复古金属漆' },
-  { id: 'tokyo', name: '东京魅夜', color: '#5b54e0', desc: '涩谷深邃魅夜靛蓝' },
-  { id: 'kamakura', name: '镰仓暮色', color: '#c26116', desc: '江之岛相模湾暖金落日' },
-  { id: 'sakura', name: '京都落樱', color: '#be4367', desc: '鸭川暮樱雅致烟粉' },
-  { id: 'slate', name: '极简钛灰', color: '#526071', desc: '深空哑光钛金属' }
+  { id: 'codex', name: 'Codex 翠绿', color: '#3d7a68', desc: '低饱和极客鼠尾草绿' },
+  { id: 'telecaster', name: 'Fender 湖水蓝', color: '#416b85', desc: '日产 Lake Placid Blue 复古金属漆' },
+  { id: 'tokyo', name: '东京魅夜', color: '#5a5782', desc: '雾气微醺低饱和暮靛蓝' },
+  { id: 'kamakura', name: '镰仓暮色', color: '#8c6239', desc: '相模湾落日暖陶焦糖' },
+  { id: 'sakura', name: '京都落樱', color: '#825363', desc: '鸭川暮樱雅致烟木粉' },
+  { id: 'slate', name: '极简钛灰', color: '#54606e', desc: '深空哑光钛金属' }
 ];
 
 function renderSettings(s, appearance) {
@@ -222,18 +222,18 @@ function renderSettings(s, appearance) {
       <section class="setting-row">
         <div class="field"><label>界面主题</label><span>选择日常偏好的视觉模式</span></div>
         <div class="theme-segmented-control" role="group" aria-label="界面主题">
-          <button type="button" class="button droplet-btn ${theme === 'light' ? 'is-active primary' : ''}" data-action="set-theme-light" aria-pressed="${theme === 'light'}">☀ 浅色模式</button>
-          <button type="button" class="button droplet-btn ${theme === 'dark' ? 'is-active primary' : ''}" data-action="set-theme-dark" aria-pressed="${theme === 'dark'}">☾ 深色模式</button>
+          <button type="button" class="theme-segment-btn ${theme === 'light' ? 'is-active' : ''}" data-action="set-theme-light" aria-pressed="${theme === 'light'}">☀ 浅色模式</button>
+          <button type="button" class="theme-segment-btn ${theme === 'dark' ? 'is-active' : ''}" data-action="set-theme-dark" aria-pressed="${theme === 'dark'}">☾ 深色模式</button>
         </div>
       </section>
       <section class="setting-row">
         <div class="field"><label>液态玻璃效果</label><span>全局毛玻璃折射与悬浮水滴质感</span></div>
         <div class="settings-actions">
-          <button type="button" class="button droplet-btn ${translucent ? 'is-active primary' : ''}" data-action="toggle-translucency" aria-pressed="${!!translucent}">${translucent ? '✓ 已开启' : '○ 已关闭'}</button>
+          <button type="button" class="toggle-translucent-btn ${translucent ? 'is-active' : ''}" data-action="toggle-translucency" aria-pressed="${!!translucent}">${translucent ? '✓ 已开启' : '○ 已关闭'}</button>
         </div>
       </section>
       <section class="setting-row preset-theme-row">
-        <div class="field"><label>色彩主题预设</label><span>参考 Codex 终端与经典工学配色</span></div>
+        <div class="field"><label>色彩主题预设</label><span>低饱和极简设计与经典工学配色</span></div>
         <div class="preset-theme-grid" role="group" aria-label="主题色彩预设">${presetsHTML}</div>
       </section>
       <section class="setting-row custom-colors-row">
@@ -257,9 +257,31 @@ function renderSettings(s, appearance) {
         </div>
       </section>
       <section class="setting-row"><div class="field"><label for="setting-auto-advance">自动前进</label><span>收录、跳过或删除后自动前进</span></div><input id="setting-auto-advance" type="checkbox" data-setting="autoAdvance" ${s?.autoAdvance !== false ? 'checked' : ''} aria-label="标记后自动前进" /></section>
-      <button type="button" class="button muted settings-link" data-action="ai"><span><strong>AI 助手</strong><small>选择建议模式和模型来源</small></span><span aria-hidden="true">›</span></button>
-      <button type="button" class="button muted settings-link" data-action="tags"><span><strong>标签管理</strong><small>调整标签名称和顺序</small></span><span aria-hidden="true">›</span></button>
-      <button type="button" class="button muted settings-link" data-action="help"><span><strong>快捷键</strong><small>查看整理操作说明</small></span><span aria-hidden="true">›</span></button>
+      <div class="settings-group-card" role="navigation" aria-label="偏好与操作指南">
+        <button type="button" class="settings-group-row settings-link" data-action="ai">
+          <div class="settings-group-text">
+            <strong>AI 助手</strong>
+            <small>选择建议模式和模型来源</small>
+          </div>
+          <span class="settings-group-arrow" aria-hidden="true">›</span>
+        </button>
+        <div class="settings-group-divider"></div>
+        <button type="button" class="settings-group-row settings-link" data-action="tags">
+          <div class="settings-group-text">
+            <strong>标签管理</strong>
+            <small>调整标签名称和顺序</small>
+          </div>
+          <span class="settings-group-arrow" aria-hidden="true">›</span>
+        </button>
+        <div class="settings-group-divider"></div>
+        <button type="button" class="settings-group-row settings-link" data-action="help">
+          <div class="settings-group-text">
+            <strong>快捷键</strong>
+            <small>查看整理操作说明</small>
+          </div>
+          <span class="settings-group-arrow" aria-hidden="true">›</span>
+        </button>
+      </div>
     </div>
   </section>`;
 }
@@ -439,12 +461,12 @@ const imageViewer=createImageViewer();
 const statusText={keep:'收录',skip:'跳过',reject:'删除'};
 
 const COLOR_PRESETS={
-  codex:{id:'codex',color:'#10a37f',darkColor:'#10b981'},
-  telecaster:{id:'telecaster',color:'#376a8d',darkColor:'#5e97be'},
-  tokyo:{id:'tokyo',color:'#5b54e0',darkColor:'#7c75f2'},
-  kamakura:{id:'kamakura',color:'#c26116',darkColor:'#e0792b'},
-  sakura:{id:'sakura',color:'#be4367',darkColor:'#e05882'},
-  slate:{id:'slate',color:'#526071',darkColor:'#8a99ac'}
+  codex:{id:'codex',color:'#3d7a68',darkColor:'#4e8e7c'},
+  telecaster:{id:'telecaster',color:'#416b85',darkColor:'#5984a1'},
+  tokyo:{id:'tokyo',color:'#5a5782',darkColor:'#726f9c'},
+  kamakura:{id:'kamakura',color:'#8c6239',darkColor:'#a67c53'},
+  sakura:{id:'sakura',color:'#825363',darkColor:'#9b6c7c'},
+  slate:{id:'slate',color:'#54606e',darkColor:'#717e8e'}
 };
 
 function parseHex(hex){
@@ -489,15 +511,16 @@ function applyAppearance(){
   const [kr,kg,kb]=parseHex(keep);
 
   root.style.setProperty('--accent',accent);
-  root.style.setProperty('--accent-hover',adjustHex(accent,isDark?0.15:-0.15));
-  root.style.setProperty('--accent-gradient',`linear-gradient(175deg, ${adjustHex(accent,0.15)} 0%, ${adjustHex(accent,-0.22)} 100%)`);
-  root.style.setProperty('--soft',`rgba(${ar},${ag},${ab},${isDark?0.16:0.10})`);
-  root.style.setProperty('--soft-border',`rgba(${ar},${ag},${ab},${isDark?0.28:0.22})`);
+  root.style.setProperty('--accent-hover',adjustHex(accent,isDark?0.12:-0.12));
+  root.style.setProperty('--accent-gradient',`linear-gradient(175deg, ${adjustHex(accent,0.12)} 0%, ${adjustHex(accent,-0.16)} 100%)`);
+  root.style.setProperty('--accent-shadow',`rgba(${ar},${ag},${ab},${isDark?0.32:0.22})`);
+  root.style.setProperty('--soft',`rgba(${ar},${ag},${ab},${isDark?0.14:0.08})`);
+  root.style.setProperty('--soft-border',`rgba(${ar},${ag},${ab},${isDark?0.24:0.18})`);
 
   root.style.setProperty('--keep-accent',keep);
-  root.style.setProperty('--keep-gradient',`linear-gradient(175deg, ${adjustHex(keep,0.15)} 0%, ${adjustHex(keep,-0.22)} 100%)`);
-  root.style.setProperty('--keep-shadow',`rgba(${kr},${kg},${kb},${isDark?0.40:0.32})`);
-  root.style.setProperty('--keep-glint',`rgba(${kr},${kg},${kb},0.85)`);
+  root.style.setProperty('--keep-gradient',`linear-gradient(175deg, ${adjustHex(keep,0.12)} 0%, ${adjustHex(keep,-0.16)} 100%)`);
+  root.style.setProperty('--keep-shadow',`rgba(${kr},${kg},${kb},${isDark?0.32:0.22})`);
+  root.style.setProperty('--keep-glint',`rgba(${kr},${kg},${kb},0.75)`);
 }
 function payload(){return{settings:Object.fromEntries(settingsKeys.map(k=>[k,s[k]])),items:photos.map(p=>({id:p.id,status:p.status||null,tags:[...p.tags],deleteReviewed:!!p.deleteReviewed}))};}
 function persist(){if(!workspace)return Promise.resolve();const id=workspace.id,data=payload();syncRecentProject();activePlan=null;saveCount++;saveIndicator();pending=pending.catch(()=>{}).then(()=>api.save(id,data)).then(()=>{saveError=null},error=>{saveError=error;toast('进度未保存：'+error.message)}).finally(()=>{saveCount--;saveIndicator()});return pending;}
@@ -603,7 +626,7 @@ async function action(a, target){
 }
 function report(error){console.error(error);toast(error.message||'操作失败');}
 root.addEventListener('pointermove',e=>{
- const el=e.target.closest('.button, .review-btn, .overview-card, .project-row, .camera-param-bar, .tag-chip, .sidebar-new-project, .overview-mode-toggle .button, .droplet-btn');
+ const el=e.target.closest('.button, .review-btn, .overview-card, .project-row, .camera-param-bar, .tag-chip, .sidebar-new-project, .overview-mode-toggle .button, .droplet-btn, .theme-segment-btn, .toggle-translucent-btn, .preset-card, .settings-group-row');
  if(el){const r=el.getBoundingClientRect();el.style.setProperty('--mouse-x',`${(e.clientX-r.left).toFixed(1)}px`);el.style.setProperty('--mouse-y',`${(e.clientY-r.top).toFixed(1)}px`);}
 });
 root.addEventListener('click',e=>{if(busy||s.view==='processing')return;const target=e.target.closest('button,[data-action]');if(!target)return;

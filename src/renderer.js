@@ -8,12 +8,12 @@ const imageViewer=createImageViewer();
 const statusText={keep:'收录',skip:'跳过',reject:'删除'};
 
 const COLOR_PRESETS={
-  codex:{id:'codex',color:'#10a37f',darkColor:'#10b981'},
-  telecaster:{id:'telecaster',color:'#376a8d',darkColor:'#5e97be'},
-  tokyo:{id:'tokyo',color:'#5b54e0',darkColor:'#7c75f2'},
-  kamakura:{id:'kamakura',color:'#c26116',darkColor:'#e0792b'},
-  sakura:{id:'sakura',color:'#be4367',darkColor:'#e05882'},
-  slate:{id:'slate',color:'#526071',darkColor:'#8a99ac'}
+  codex:{id:'codex',color:'#3d7a68',darkColor:'#4e8e7c'},
+  telecaster:{id:'telecaster',color:'#416b85',darkColor:'#5984a1'},
+  tokyo:{id:'tokyo',color:'#5a5782',darkColor:'#726f9c'},
+  kamakura:{id:'kamakura',color:'#8c6239',darkColor:'#a67c53'},
+  sakura:{id:'sakura',color:'#825363',darkColor:'#9b6c7c'},
+  slate:{id:'slate',color:'#54606e',darkColor:'#717e8e'}
 };
 
 function parseHex(hex){
@@ -58,15 +58,16 @@ function applyAppearance(){
   const [kr,kg,kb]=parseHex(keep);
 
   root.style.setProperty('--accent',accent);
-  root.style.setProperty('--accent-hover',adjustHex(accent,isDark?0.15:-0.15));
-  root.style.setProperty('--accent-gradient',`linear-gradient(175deg, ${adjustHex(accent,0.15)} 0%, ${adjustHex(accent,-0.22)} 100%)`);
-  root.style.setProperty('--soft',`rgba(${ar},${ag},${ab},${isDark?0.16:0.10})`);
-  root.style.setProperty('--soft-border',`rgba(${ar},${ag},${ab},${isDark?0.28:0.22})`);
+  root.style.setProperty('--accent-hover',adjustHex(accent,isDark?0.12:-0.12));
+  root.style.setProperty('--accent-gradient',`linear-gradient(175deg, ${adjustHex(accent,0.12)} 0%, ${adjustHex(accent,-0.16)} 100%)`);
+  root.style.setProperty('--accent-shadow',`rgba(${ar},${ag},${ab},${isDark?0.32:0.22})`);
+  root.style.setProperty('--soft',`rgba(${ar},${ag},${ab},${isDark?0.14:0.08})`);
+  root.style.setProperty('--soft-border',`rgba(${ar},${ag},${ab},${isDark?0.24:0.18})`);
 
   root.style.setProperty('--keep-accent',keep);
-  root.style.setProperty('--keep-gradient',`linear-gradient(175deg, ${adjustHex(keep,0.15)} 0%, ${adjustHex(keep,-0.22)} 100%)`);
-  root.style.setProperty('--keep-shadow',`rgba(${kr},${kg},${kb},${isDark?0.40:0.32})`);
-  root.style.setProperty('--keep-glint',`rgba(${kr},${kg},${kb},0.85)`);
+  root.style.setProperty('--keep-gradient',`linear-gradient(175deg, ${adjustHex(keep,0.12)} 0%, ${adjustHex(keep,-0.16)} 100%)`);
+  root.style.setProperty('--keep-shadow',`rgba(${kr},${kg},${kb},${isDark?0.32:0.22})`);
+  root.style.setProperty('--keep-glint',`rgba(${kr},${kg},${kb},0.75)`);
 }
 function payload(){return{settings:Object.fromEntries(settingsKeys.map(k=>[k,s[k]])),items:photos.map(p=>({id:p.id,status:p.status||null,tags:[...p.tags],deleteReviewed:!!p.deleteReviewed}))};}
 function persist(){if(!workspace)return Promise.resolve();const id=workspace.id,data=payload();syncRecentProject();activePlan=null;saveCount++;saveIndicator();pending=pending.catch(()=>{}).then(()=>api.save(id,data)).then(()=>{saveError=null},error=>{saveError=error;toast('进度未保存：'+error.message)}).finally(()=>{saveCount--;saveIndicator()});return pending;}
@@ -172,7 +173,7 @@ async function action(a, target){
 }
 function report(error){console.error(error);toast(error.message||'操作失败');}
 root.addEventListener('pointermove',e=>{
- const el=e.target.closest('.button, .review-btn, .overview-card, .project-row, .camera-param-bar, .tag-chip, .sidebar-new-project, .overview-mode-toggle .button, .droplet-btn');
+ const el=e.target.closest('.button, .review-btn, .overview-card, .project-row, .camera-param-bar, .tag-chip, .sidebar-new-project, .overview-mode-toggle .button, .droplet-btn, .theme-segment-btn, .toggle-translucent-btn, .preset-card, .settings-group-row');
  if(el){const r=el.getBoundingClientRect();el.style.setProperty('--mouse-x',`${(e.clientX-r.left).toFixed(1)}px`);el.style.setProperty('--mouse-y',`${(e.clientY-r.top).toFixed(1)}px`);}
 });
 root.addEventListener('click',e=>{if(busy||s.view==='processing')return;const target=e.target.closest('button,[data-action]');if(!target)return;
