@@ -1,0 +1,20 @@
+{
+  "name": "shiguang",
+  "productName": "拾光",
+  "version": "0.2.0",
+  "description": "本地照片与视频整理工具",
+  "private": true,
+  "main": "src/main.cjs",
+  "scripts": {
+    "build": "node scripts/build.cjs",
+    "start": "npm run build && electron .",
+    "test": "node --test test/*.test.cjs",
+    "package:win": "npm run build && node scripts/package.cjs win32 x64",
+    "package:mac": "npm run build && node scripts/package.cjs darwin arm64",
+    "package:mac:intel": "npm run build && node scripts/package.cjs darwin x64"
+  },
+  "devDependencies": {
+    "@electron/packager": "20.3.0",
+    "electron": "45.0.0"
+  }
+}
