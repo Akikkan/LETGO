@@ -1,8 +1,22 @@
 'use strict';
 
 const fs = require('node:fs/promises');
+const nodeFs = require('node:fs');
 const path = require('node:path');
 const crypto = require('node:crypto');
+
+async function safeRealpath(target) {
+  try {
+    return await fs.realpath(target);
+  } catch (error) {
+    if (error.code === 'EPERM') {
+      return new Promise((resolve, reject) => {
+        nodeFs.realpath(target, (err, res) => err ? reject(err) : resolve(res));
+      });
+    }
+    throw error;
+  }
+}
 
 const PHOTO_EXTENSIONS = new Set(['.jpg', '.jpeg', '.png', '.webp', '.gif', '.heic', '.heif', '.dng', '.arw', '.cr2', '.cr3', '.nef', '.raf']);
 const VIDEO_EXTENSIONS = new Set(['.mp4', '.mov', '.m4v', '.mkv']);
@@ -178,7 +192,7 @@ async function canonicalPathAllowMissing(target) {
   const suffix = [];
   for (;;) {
     try {
-      const real = await fs.realpath(cursor);
+      const real = await safeRealpath(cursor);
       return path.resolve(real, ...suffix);
     } catch (error) {
       if (error.code !== 'ENOENT') throw error;
@@ -346,7 +360,7 @@ function createStore({ dataDir, trashItem, onProgress = () => {}, readMetadata }
     const entered = path.resolve(sourceDir);
     const rootStat = await fs.lstat(entered);
     if (rootStat.isSymbolicLink() || !rootStat.isDirectory()) throw new Error('素材目录必须是实际目录，不能是符号链接');
-    const canonical = await fs.realpath(entered);
+    const canonical = await safeRealpath(entered);
     const id = digest(stableSourceKey(canonical));
     if (locks.has(id)) throw new Error('工作区正在归档');
     const old = await readStored(id);
@@ -557,7 +571,7 @@ function createStore({ dataDir, trashItem, onProgress = () => {}, readMetadata }
     try {
       state = await getState(id);
       if (workspaceRevision(state) !== planData.signature) throw new Error('工作区状态在方案生成后已变化，请重新生成方案');
-      if (state.sourceDir !== (await fs.realpath(state.sourceDir))) throw new Error('素材目录位置已变化');
+      if (state.sourceDir !== (await safeRealpath(state.sourceDir))) throw new Error('素材目录位置已变化');
       await assertNoSymlinkPath(planData.outputDir, true);
       const actualOutputDir = await canonicalPathAllowMissing(planData.outputDir);
       if (isWithin(state.sourceDir, actualOutputDir)) throw new Error('归档目录不能位于素材源目录内');
