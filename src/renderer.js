@@ -1,14 +1,73 @@
 const api=window.shiguang,root=document.getElementById('shiguang'),page=root.querySelector('#sg-page');
 const esc=escapeHomeValue;
-let workspace=null,photos=[],recent=[],appearance={theme:'light',translucent:true};
+let workspace=null,photos=[],recent=[],appearance={theme:'light',translucent:true,colorTheme:'codex',customAccent:null,keepColor:null};
 let s={view:'home',tags:[],index:0},history=[],backStack=[],activePlan=null,result=null,busy=false;
 let pending=Promise.resolve(),saveCount=0,saveError=null,toastTimer;
 const settingsKeys=['name','trip','collection','tags','autoAdvance','aiMode','archiveMode'];
 const imageViewer=createImageViewer();
 const statusText={keep:'收录',skip:'跳过',reject:'删除'};
+
+const COLOR_PRESETS={
+  codex:{id:'codex',color:'#10a37f',darkColor:'#10b981'},
+  telecaster:{id:'telecaster',color:'#376a8d',darkColor:'#5e97be'},
+  tokyo:{id:'tokyo',color:'#5b54e0',darkColor:'#7c75f2'},
+  kamakura:{id:'kamakura',color:'#c26116',darkColor:'#e0792b'},
+  sakura:{id:'sakura',color:'#be4367',darkColor:'#e05882'},
+  slate:{id:'slate',color:'#526071',darkColor:'#8a99ac'}
+};
+
+function parseHex(hex){
+  const m=/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  return m?[parseInt(m[1],16),parseInt(m[2],16),parseInt(m[3],16)]:[16,163,127];
+}
+function adjustHex(hex,factor){
+  const [r,g,b]=parseHex(hex);
+  const clamp=v=>Math.max(0,Math.min(255,Math.round(v)));
+  if(factor>0)return `#${[r+(255-r)*factor,g+(255-g)*factor,b+(255-b)*factor].map(v=>clamp(v).toString(16).padStart(2,'0')).join('')}`;
+  const f=1+factor;
+  return `#${[r*f,g*f,b*f].map(v=>clamp(v).toString(16).padStart(2,'0')).join('')}`;
+}
+
 function toast(message){const box=root.querySelector('#sg-toast');box.textContent=message;box.classList.add('visible');clearTimeout(toastTimer);toastTimer=setTimeout(()=>box.classList.remove('visible'),4500);}
 function saveIndicator(){const label=root.querySelector('#save-state');label.textContent=saveError?'保存失败 · 点击重试':saveCount?'保存中…':workspace?'已保存':'';label.classList.toggle('saving-error',!!saveError);label.dataset.action=saveError?'retry-save':'';}
-function applyAppearance(){root.dataset.theme=appearance.theme;root.style.colorScheme=appearance.theme;document.documentElement.style.colorScheme=appearance.theme;document.body.style.background=appearance.translucent?'transparent':appearance.theme==='dark'?'#0c1017':'#f1f5f9';root.classList.toggle('translucent',appearance.translucent);const b=root.querySelector('.app-chrome [data-action=toggle-theme]');if(b){b.textContent=appearance.theme==='dark'?'☾':'☀';b.setAttribute('title',appearance.theme==='dark'?'当前：深色模式，点击切换为浅色':'当前：浅色模式，点击切换为深色');b.setAttribute('aria-label',appearance.theme==='dark'?'切换为浅色模式':'切换为深色模式');}const tb=root.querySelector('.app-chrome [data-action=toggle-translucency]');if(tb){tb.setAttribute('aria-pressed',String(appearance.translucent));tb.setAttribute('title',appearance.translucent?'液态玻璃：已开启，点击关闭':'液态玻璃：已关闭，点击开启');}}
+function applyAppearance(){
+  root.dataset.theme=appearance.theme;
+  root.style.colorScheme=appearance.theme;
+  document.documentElement.style.colorScheme=appearance.theme;
+  document.body.style.background=appearance.translucent?'transparent':appearance.theme==='dark'?'#0c1017':'#f1f5f9';
+  root.classList.toggle('translucent',appearance.translucent);
+
+  const b=root.querySelector('.app-chrome [data-action=toggle-theme]');
+  if(b){
+    b.textContent=appearance.theme==='dark'?'☾':'☀';
+    b.setAttribute('title',appearance.theme==='dark'?'当前：深色模式，点击切换为浅色':'当前：浅色模式，点击切换为深色');
+    b.setAttribute('aria-label',appearance.theme==='dark'?'切换为浅色模式':'切换为深色模式');
+  }
+  const tb=root.querySelector('.app-chrome [data-action=toggle-translucency]');
+  if(tb){
+    tb.setAttribute('aria-pressed',String(appearance.translucent));
+    tb.setAttribute('title',appearance.translucent?'液态玻璃：已开启，点击关闭':'液态玻璃：已关闭，点击开启');
+  }
+
+  const p=COLOR_PRESETS[appearance.colorTheme]||COLOR_PRESETS.codex;
+  const isDark=appearance.theme==='dark';
+  const accent=appearance.customAccent||(isDark?p.darkColor:p.color);
+  const keep=appearance.keepColor||accent;
+
+  const [ar,ag,ab]=parseHex(accent);
+  const [kr,kg,kb]=parseHex(keep);
+
+  root.style.setProperty('--accent',accent);
+  root.style.setProperty('--accent-hover',adjustHex(accent,isDark?0.15:-0.15));
+  root.style.setProperty('--accent-gradient',`linear-gradient(175deg, ${adjustHex(accent,0.15)} 0%, ${adjustHex(accent,-0.22)} 100%)`);
+  root.style.setProperty('--soft',`rgba(${ar},${ag},${ab},${isDark?0.16:0.10})`);
+  root.style.setProperty('--soft-border',`rgba(${ar},${ag},${ab},${isDark?0.28:0.22})`);
+
+  root.style.setProperty('--keep-accent',keep);
+  root.style.setProperty('--keep-gradient',`linear-gradient(175deg, ${adjustHex(keep,0.15)} 0%, ${adjustHex(keep,-0.22)} 100%)`);
+  root.style.setProperty('--keep-shadow',`rgba(${kr},${kg},${kb},${isDark?0.40:0.32})`);
+  root.style.setProperty('--keep-glint',`rgba(${kr},${kg},${kb},0.85)`);
+}
 function payload(){return{settings:Object.fromEntries(settingsKeys.map(k=>[k,s[k]])),items:photos.map(p=>({id:p.id,status:p.status||null,tags:[...p.tags],deleteReviewed:!!p.deleteReviewed}))};}
 function persist(){if(!workspace)return Promise.resolve();const id=workspace.id,data=payload();syncRecentProject();activePlan=null;saveCount++;saveIndicator();pending=pending.catch(()=>{}).then(()=>api.save(id,data)).then(()=>{saveError=null},error=>{saveError=error;toast('进度未保存：'+error.message)}).finally(()=>{saveCount--;saveIndicator()});return pending;}
 function syncRecentProject(){if(!workspace)return;const row={id:workspace.id,name:s.name,sourceDir:workspace.sourceDir,total:photos.length,processed:photos.filter(p=>p.status).length};const i=recent.findIndex(p=>p.id===row.id);if(i>=0)recent[i]={...recent[i],...row};else recent.unshift(row);renderProjectSidebar({recent,activeId:workspace.id,busy:!!busy||s.view==='processing'});}
@@ -70,12 +129,14 @@ function decide(status){const p=photos[s.index];if(!available(p))return;snapshot
  else if(s.autoAdvance){const next=photos.findIndex((x,i)=>i>s.index&&!x.status&&available(x)),first=photos.findIndex(x=>!x.status&&available(x));if(next>=0)s.index=next;else if(first>=0)s.index=first;}
  const quarter=Math.floor(photos.filter(p=>p.status).length/Math.max(1,photos.length)*4),award=quarter>(s.milestones||0);s.milestones=Math.max(s.milestones||0,quarter);render();persist();if(award)toast(quarter===4?'🏆 100%':`${['','◔','◑','◕'][quarter]} ${quarter*25}%`);
 }
-async function action(a){
+async function action(a, target){
  if(busy||s.view==='processing')return;
  if(a==='toggle-sidebar'){toggleProjectSidebar();return;}
  if(a==='close-sidebar'){toggleProjectSidebar(false);return;}
  if(a==='set-theme-light'||a==='set-theme-dark'){appearance.theme=a==='set-theme-dark'?'dark':'light';applyAppearance();await api.appearance(appearance);if(s.view==='settings')render();return;}
  if(a==='toggle-theme'||a==='toggle-translucency'){if(a==='toggle-theme')appearance.theme=appearance.theme==='light'?'dark':'light';else appearance.translucent=!appearance.translucent;applyAppearance();await api.appearance(appearance);if(s.view==='settings')render();return;}
+ if(a==='set-preset-theme'){const p=target?.dataset.preset;if(p&&COLOR_PRESETS[p]){appearance.colorTheme=p;appearance.customAccent=null;appearance.keepColor=null;applyAppearance();await api.appearance(appearance);if(s.view==='settings')render();toast(`已应用色彩预设`);}return;}
+ if(a==='reset-theme-colors'){appearance.customAccent=null;appearance.keepColor=null;applyAppearance();await api.appearance(appearance);if(s.view==='settings')render();toast('已恢复当前预设标准色彩');return;}
  if(a==='choose-folder'){await flush();await withBusy('正在扫描照片与视频…',async()=>{const w=await api.choose();if(w){acceptWorkspace(w,'setup');recent=await api.list()}});return;}
  if(a==='home'){await flush();recent=await api.list();changeView('home');return;}
  if(a==='retry-save'){await persist();return;}
@@ -124,7 +185,17 @@ root.addEventListener('click',e=>{if(busy||s.view==='processing')return;const ta
   if(target.dataset.quickTag){const t=target.dataset.quickTag,p=photos[s.index];if(available(p)){snapshot();if(!p.tags.includes(t))p.tags=[...p.tags,t];render();persist();toast(`已添加标签：${t}`);}return;}
  if(target.dataset.addSuggested){const t=target.dataset.addSuggested;if(!s.tags.includes(t)){s.tags.push(t);persist();toast('已加入常用标签')}return;}
  if(target.dataset.tagUp!==undefined||target.dataset.tagDown!==undefined){const i=Number(target.dataset.tagUp??target.dataset.tagDown),j=i+(target.dataset.tagUp!==undefined?-1:1);if(s.tags[j]!==undefined){snapshot();[s.tags[i],s.tags[j]]=[s.tags[j],s.tags[i]];render();persist()}return;}
- if(target.dataset.action)action(target.dataset.action).catch(report);
+ if(target.dataset.action)action(target.dataset.action, target).catch(report);
+});
+root.addEventListener('input',e=>{
+ const el=e.target;
+ if(el.dataset.settingColor){
+  appearance[el.dataset.settingColor]=el.value;
+  const hex=el.parentElement?.querySelector('.color-hex');
+  if(hex)hex.textContent=el.value.toUpperCase();
+  applyAppearance();
+  api.appearance(appearance).catch(report);
+ }
 });
 root.addEventListener('change',e=>{const el=e.target;if(busy)return;if(el.dataset.setting){const key=el.dataset.setting;if(!settingsKeys.includes(key))return;s[key]=el.type==='checkbox'?el.checked:el.value;persist();if(el.tagName==='SELECT'||el.type==='checkbox'||el.type==='radio')render();else{const dest=page.querySelector('.setup-destination');if(dest)dest.textContent='整理好的素材 / '+(s.trip||'旅程')+' / '+(s.collection||'地点');const execute=page.querySelector('[data-action=execute]');if(execute)execute.disabled=true;const plans=page.querySelector('.plan-list');if(plans)plans.innerHTML=filenamePlans(s,photos.filter(p=>!p.archived)).slice(0,100).map(x=>`<div class="plan-row"><span>${esc(x.photo.relativePath)}</span><span>→</span><span>${esc(x.name)}</span></div>`).join('');}}
  if(el.dataset.tagIndex!==undefined){const i=Number(el.dataset.tagIndex),old=s.tags[i],next=el.value.trim();if(!next||s.tags.includes(next)){el.value=old;return}snapshot();s.tags[i]=next;photos.forEach(p=>p.tags=p.tags.map(t=>t===old?next:t));persist();render();}

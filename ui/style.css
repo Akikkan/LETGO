@@ -1036,7 +1036,7 @@ html, body {
 }
 
 #shiguang .overview-card-badge.status-keep {
-  background: rgba(55, 106, 141, 0.9);
+  background: var(--keep-accent, var(--accent));
   color: #ffffff;
 }
 
@@ -1403,10 +1403,168 @@ html, body {
   opacity: 1;
 }
 
-/* Distinct Action Buttons in Review */
-#shiguang .review-btn[data-action="keep"]:hover:not(:disabled) {
+/* Color Theme Presets Grid */
+#shiguang .preset-theme-row, #shiguang .custom-colors-row {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 12px;
+}
+
+#shiguang .preset-theme-row .field, #shiguang .custom-colors-row .field {
+  width: 100%;
+}
+
+#shiguang .preset-theme-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  width: 100%;
+  margin-top: 2px;
+}
+
+#shiguang .preset-card {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border-radius: 9999px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  color: var(--ink);
+  cursor: pointer;
+  box-shadow: 0 2px 6px var(--shade);
+  transition: transform .14s cubic-bezier(0.2, 0, 0.1, 1), border-color .16s ease, box-shadow .16s ease, background .16s ease;
+  font-size: 12px;
+  font-weight: 500;
+  text-align: left;
+}
+
+#shiguang .preset-card:hover {
+  transform: translateY(-2px);
   border-color: var(--accent);
-  box-shadow: 0 8px 24px rgba(55, 106, 141, 0.35), inset 0 1.5px 1.5px var(--glint);
+  box-shadow: 0 6px 18px var(--shade);
+}
+
+#shiguang .preset-card.is-active {
+  background: var(--soft);
+  border-color: var(--accent);
+  color: var(--accent);
+  font-weight: 600;
+  box-shadow: 0 4px 14px var(--shade), inset 0 1px 1px var(--glint);
+}
+
+#shiguang .preset-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.4);
+}
+
+#shiguang .preset-title {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Custom Component Color Pickers */
+#shiguang .custom-color-pickers {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 4px;
+}
+
+#shiguang .color-picker-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--ink);
+  cursor: pointer;
+}
+
+#shiguang .color-picker-bubble {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 12px 4px 5px;
+  border-radius: 9999px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  box-shadow: 0 2px 6px var(--shade);
+  transition: border-color .16s ease, box-shadow .16s ease;
+}
+
+#shiguang .color-picker-bubble:hover {
+  border-color: var(--accent);
+  box-shadow: 0 4px 12px var(--shade);
+}
+
+#shiguang .color-picker-bubble input[type="color"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  cursor: pointer;
+  background: transparent;
+}
+
+#shiguang .color-picker-bubble input[type="color"]::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+#shiguang .color-picker-bubble input[type="color"]::-webkit-color-swatch {
+  border: 1px solid var(--glint);
+  border-radius: 50%;
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.5), 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+#shiguang .color-hex {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 11px;
+  color: var(--muted);
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+#shiguang .reset-colors-btn {
+  padding: 7px 16px;
+  font-size: 11px;
+  color: var(--muted);
+  border-radius: 9999px;
+}
+
+/* Distinct Action Buttons in Review */
+#shiguang .review-btn[data-action="keep"] {
+  background: var(--keep-gradient, var(--accent-gradient)) !important;
+  color: #ffffff !important;
+  font-weight: 600;
+  border-color: rgba(255, 255, 255, 0.35) !important;
+  box-shadow: 0 4px 14px var(--keep-shadow, rgba(55, 106, 141, 0.35)), inset 0 1.5px 1px rgba(255, 255, 255, 0.75), inset 0 -2px 3px rgba(0, 0, 0, 0.25) !important;
+}
+
+#shiguang .review-btn[data-action="keep"]:hover:not(:disabled) {
+  border-color: var(--keep-accent, var(--accent)) !important;
+  box-shadow: 0 8px 24px var(--keep-shadow, rgba(55, 106, 141, 0.45)), inset 0 1.5px 1.5px var(--glint) !important;
+  transform: translateY(-2px) scale(1.025);
+}
+
+#shiguang .review-btn[data-action="keep"]::before {
+  background: radial-gradient(
+    circle 85px at var(--mouse-x, 50%) var(--mouse-y, 50%),
+    rgba(225, 245, 255, 0.98) 0%,
+    var(--keep-glint, rgba(100, 172, 215, 0.85)) 24%,
+    rgba(245, 230, 205, 0.40) 48%,
+    transparent 72%
+  ) !important;
+  filter: drop-shadow(0 0 1.5px var(--keep-accent, rgba(100, 172, 215, 0.65))) !important;
 }
 
 #shiguang .review-btn[data-action="skip"]:hover:not(:disabled) {

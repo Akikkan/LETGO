@@ -1,7 +1,29 @@
+const THEME_PRESETS = [
+  { id: 'codex', name: 'Codex 翠绿', color: '#10a37f', desc: 'OpenAI 极客翠绿终端美学' },
+  { id: 'telecaster', name: 'Fender 湖水蓝', color: '#376a8d', desc: '日产 Lake Placid Blue 复古金属漆' },
+  { id: 'tokyo', name: '东京魅夜', color: '#5b54e0', desc: '涩谷深邃魅夜靛蓝' },
+  { id: 'kamakura', name: '镰仓暮色', color: '#c26116', desc: '江之岛相模湾暖金落日' },
+  { id: 'sakura', name: '京都落樱', color: '#be4367', desc: '鸭川暮樱雅致烟粉' },
+  { id: 'slate', name: '极简钛灰', color: '#526071', desc: '深空哑光钛金属' }
+];
+
 function renderSettings(s, appearance) {
   const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   const theme = appearance?.theme || s?.theme || 'light';
   const translucent = appearance?.translucent ?? s?.translucency ?? true;
+  const colorTheme = appearance?.colorTheme || 'codex';
+  const preset = THEME_PRESETS.find(p => p.id === colorTheme) || THEME_PRESETS[0];
+  const customAccent = appearance?.customAccent || preset.color;
+  const keepColor = appearance?.keepColor || preset.color;
+
+  const presetsHTML = THEME_PRESETS.map(p => {
+    const active = colorTheme === p.id && !appearance?.customAccent;
+    return `<button type="button" class="preset-card ${active ? 'is-active' : ''}" data-action="set-preset-theme" data-preset="${p.id}" title="${p.name} - ${p.desc}">
+      <span class="preset-dot" style="background:${p.color}"></span>
+      <span class="preset-title">${p.name}</span>
+    </button>`;
+  }).join('');
+
   return `<section class="flow-page settings-page" aria-label="设置">
     <header class="flow-header"><button type="button" class="button muted" data-action="back" aria-label="返回">← 返回</button><div><div class="flow-eyebrow">${esc(s?.name || '工作区')}</div><h1>设置</h1></div></header>
     <div class="form-grid">
@@ -16,6 +38,30 @@ function renderSettings(s, appearance) {
         <div class="field"><label>液态玻璃效果</label><span>全局毛玻璃折射与悬浮水滴质感</span></div>
         <div class="settings-actions">
           <button type="button" class="button droplet-btn ${translucent ? 'is-active primary' : ''}" data-action="toggle-translucency" aria-pressed="${!!translucent}">${translucent ? '✓ 已开启' : '○ 已关闭'}</button>
+        </div>
+      </section>
+      <section class="setting-row preset-theme-row">
+        <div class="field"><label>色彩主题预设</label><span>参考 Codex 终端与经典工学配色</span></div>
+        <div class="preset-theme-grid" role="group" aria-label="主题色彩预设">${presetsHTML}</div>
+      </section>
+      <section class="setting-row custom-colors-row">
+        <div class="field"><label>组件自定义颜色</label><span>微调主强调色与「收录」按键的高光配色</span></div>
+        <div class="custom-color-pickers">
+          <label class="color-picker-item" title="全局主强调色、选中标签与分段器高光">
+            <span>主强调色</span>
+            <div class="color-picker-bubble">
+              <input type="color" data-setting-color="customAccent" value="${customAccent}" />
+              <span class="color-hex">${customAccent.toUpperCase()}</span>
+            </div>
+          </label>
+          <label class="color-picker-item" title="筛选「收录」按钮的专属按键配色">
+            <span>「收录」按键</span>
+            <div class="color-picker-bubble">
+              <input type="color" data-setting-color="keepColor" value="${keepColor}" />
+              <span class="color-hex">${keepColor.toUpperCase()}</span>
+            </div>
+          </label>
+          <button type="button" class="button droplet-btn reset-colors-btn" data-action="reset-theme-colors" title="重置为当前预设标准色彩">重置色彩</button>
         </div>
       </section>
       <section class="setting-row"><div class="field"><label for="setting-auto-advance">自动前进</label><span>收录、跳过或删除后自动前进</span></div><input id="setting-auto-advance" type="checkbox" data-setting="autoAdvance" ${s?.autoAdvance !== false ? 'checked' : ''} aria-label="标记后自动前进" /></section>

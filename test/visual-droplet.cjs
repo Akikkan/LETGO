@@ -59,13 +59,18 @@ const root = path.join(__dirname, '..');
     await page.setContent(html);
     await page.addStyleTag({ content: fs.readFileSync(path.join(root, 'ui/style.css'), 'utf8') });
 
-    let currentTheme = 'light';
-    let currentTranslucent = true;
+    let currentPrefs = {
+      theme: 'light',
+      translucent: true,
+      colorTheme: 'codex',
+      customAccent: null,
+      keepColor: null
+    };
 
-    await page.evaluate(({ w, currentTheme, currentTranslucent }) => {
+    await page.evaluate(({ w, currentPrefs }) => {
       window.shiguang = {
         bootstrap: async () => ({
-          preferences: { theme: currentTheme, translucent: currentTranslucent },
+          preferences: currentPrefs,
           recent: [
             { id: 'sample', name: w.settings.name, processed: 1, total: 3 },
             { id: 'kyoto', name: '京都旅拍', processed: 48, total: 520 }
@@ -78,13 +83,12 @@ const root = path.join(__dirname, '..');
           { id: 'kyoto', name: '京都旅拍', processed: 48, total: 520 }
         ],
         appearance: async (prefs) => {
-          currentTheme = prefs.theme;
-          currentTranslucent = prefs.translucent;
+          Object.assign(currentPrefs, prefs);
         },
         onProgress: () => {},
         save: async () => w
       };
-    }, { w, currentTheme, currentTranslucent });
+    }, { w, currentPrefs });
 
     const code = fs.readFileSync(path.join(root, 'ui/app.js'), 'utf8')
       .replace('src:`sgmedia://${w.id}/${p.id}`', 'src:p.preview||`sgmedia://${w.id}/${p.id}`');
@@ -92,7 +96,7 @@ const root = path.join(__dirname, '..');
     await page.addScriptTag({ content: code });
     await page.locator('.home-entry').waitFor();
 
-    // 1. Open settings in light mode
+    // 1. Open settings in light mode with Codex presets
     await page.locator('.app-chrome [data-action=settings]').click();
     await page.locator('.settings-page').waitFor();
     await page.screenshot({ path: path.join(__dirname, 'shot-settings-light.png') });
@@ -102,7 +106,7 @@ const root = path.join(__dirname, '..');
     await page.waitForTimeout(100);
     await page.screenshot({ path: path.join(__dirname, 'shot-settings-dark.png') });
 
-    // 3. Go to review mode in dark mode and test hover droplet glint
+    // 3. Go to review mode in dark mode with Codex Emerald and test hover droplet glint
     await page.locator('[data-action=back]').click();
     await page.locator('#project-list [data-workspace=sample]').click();
     await page.locator('.review-dock').waitFor();
@@ -115,13 +119,11 @@ const root = path.join(__dirname, '..');
     }
     await page.screenshot({ path: path.join(__dirname, 'shot-review-dark-droplet.png') });
 
-    // 4. Go to Overview grid in dark mode
+    // 4. Test selecting Fender Telecaster preset from settings
     await page.locator('.app-chrome [data-action=settings]').click();
-    await page.locator('[data-action=set-theme-light]').click();
-    await page.locator('[data-action=back]').click();
-    await page.locator('.review-mini[data-action=overview]').click();
-    await page.locator('.overview-grid').waitFor();
-    await page.screenshot({ path: path.join(__dirname, 'shot-overview-light-droplet.png') });
+    await page.locator('[data-preset=telecaster]').click();
+    await page.waitForTimeout(100);
+    await page.screenshot({ path: path.join(__dirname, 'shot-settings-telecaster.png') });
 
     console.log('All visual screenshots successfully captured.');
   } finally {
