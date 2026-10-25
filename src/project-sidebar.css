@@ -9,18 +9,18 @@
 #shiguang .sidebar-new-project:hover{border-color:var(--accent);background:var(--surface)}
 #shiguang .sidebar-new-icon{font-size:18px;color:var(--accent);line-height:1}
 #shiguang #project-list{display:grid;align-content:start;gap:4px;overflow:auto;min-height:0}
-#shiguang .project-row{display:flex;align-items:stretch;gap:2px;min-width:0;border-radius:11px}
-#shiguang .project-row.is-active{background:var(--paper)}
+#shiguang .project-row{display:flex;align-items:stretch;gap:2px;min-width:0;border-radius:11px;transition:background .15s}
+#shiguang .project-row:hover,#shiguang .project-row.is-active{background:var(--paper)}
 #shiguang .project-open{flex:1;min-width:0;padding:9px 9px 8px;border:0;border-radius:10px;background:transparent;color:var(--ink);text-align:left;cursor:pointer}
-#shiguang .project-open:hover,.project-row.is-active .project-open{background:var(--paper)}
 #shiguang .project-open:disabled,#shiguang .project-settings:disabled,#shiguang .sidebar-new-project:disabled{opacity:.55;cursor:default}
 #shiguang .project-name{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:13px;line-height:1.5}
 #shiguang .project-progress{display:flex;align-items:center;gap:5px;margin-top:3px;color:var(--muted);font-size:11px}
 #shiguang .project-trophy{font-size:12px;line-height:1}
 #shiguang .project-progress-track{display:block;height:2px;margin-top:7px;overflow:hidden;border-radius:4px;background:var(--line)}
 #shiguang .project-progress-track>span{display:block;height:100%;border-radius:inherit;background:var(--accent)}
-#shiguang .project-settings{flex:0 0 30px;align-self:center;width:30px;height:30px;border:0;border-radius:8px;background:transparent;color:var(--muted);font-size:13px;cursor:pointer}
-#shiguang .project-settings:hover{background:var(--surface);color:var(--ink)}
+#shiguang .project-settings{flex:0 0 30px;align-self:center;width:30px;height:30px;border:0;border-radius:8px;background:transparent;color:var(--muted);font-size:13px;cursor:pointer;transition:color .15s,background .15s}
+#shiguang .project-row:hover .project-settings{color:var(--ink)}
+#shiguang .project-settings:hover{background:var(--surface)}
 #shiguang .project-empty{margin:7px 5px;color:var(--muted);font-size:12px}
 #shiguang .main-panel{display:flex;flex:1 1 auto;flex-direction:column;position:relative;min-width:0;min-height:0}
 #shiguang .main-panel #sg-page{flex:1 1 auto;min-width:0;min-height:0}

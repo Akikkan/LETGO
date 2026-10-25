@@ -98,6 +98,15 @@ function sanitizeSettings(value, previous = {}) {
   };
 }
 
+function extractTimeFromName(name) {
+  const match = String(name).match(/((?:19|20)\d{2})[-:_]?(\d{2})[-:_]?(\d{2})[T _-]?(\d{2})[:\-_]?(\d{2})[:\-_]?(\d{2})/);
+  if (!match) return null;
+  const [, y, m, d, h, min, sec] = match;
+  const date = new Date(Date.UTC(+y, +m - 1, +d, +h, +min, +sec));
+  if (date.getUTCFullYear() !== +y || date.getUTCMonth() !== +m - 1 || date.getUTCDate() !== +d || +h > 23 || +min > 59 || +sec > 59) return null;
+  return `${y}-${m}-${d}T${h}:${min}:${sec}`;
+}
+
 function truncateUtf8(value, maxBytes) {
   let result = '';
   let bytes = 0;
@@ -305,6 +314,10 @@ function createStore({ dataDir, trashItem, onProgress = () => {}, readMetadata }
             capturedAt = typeof metadata === 'string' ? metadata : metadata?.capturedAt || metadata?.DateTimeOriginal || metadata?.dateTimeOriginal || null;
             if (capturedAt != null) capturedAt = String(capturedAt).slice(0, 80);
           } catch { capturedAt = null; }
+        }
+        if (!capturedAt) {
+          const fromName = extractTimeFromName(entry.name);
+          if (fromName) capturedAt = fromName;
         }
         const old = prior.get(rel);
         const unchanged = !!old && old.size === lst.size && old.mtimeMs === lst.mtimeMs;

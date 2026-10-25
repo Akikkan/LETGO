@@ -402,7 +402,7 @@ function render(){
  else if(s.view==='setup')html=renderSetup(s,photos).replace('原型 · 路径与文件操作仅演示','').replace('工作区设置','整理设置')+`<div class="resume-tools"><button class="button" data-action="rescan">重新扫描</button><button class="button" data-action="reveal">打开源文件夹</button></div>`;
  else if(s.view==='review'){
   html=renderReview(s,photos);const p=photos[s.index];
-  if(p){html+=`<div class="review-fileline"><span>${esc(p.relativePath)}</span><span>${p.capturedAt?esc(p.capturedAt.replace('T',' ')):'未读取到拍摄时间'}</span></div>`;if(s.aiMode!=='off'&&p.suggestedTags?.length)html+=`<div class="suggestion-row"><span>AI 建议 · ${p.suggestedTags.map(esc).join(' · ')}</span><button class="button" data-action="accept-suggestion">采用标签</button></div>`;}
+  if(p){const timeText=p.capturedAt?esc(p.capturedAt.replace('T',' ')):(p.mtimeMs?`文件时间 ${new Date(p.mtimeMs).toISOString().slice(0,19).replace('T',' ')}`:'未读取到拍摄时间');html+=`<div class="review-fileline"><span>${esc(p.relativePath)}</span><span>${timeText}</span></div>`;if(s.aiMode!=='off'&&p.suggestedTags?.length)html+=`<div class="suggestion-row"><span>AI 建议 · ${p.suggestedTags.map(esc).join(' · ')}</span><button class="button" data-action="accept-suggestion">采用标签</button></div>`;}
  }else if(s.view==='confirm')html=renderArchive();
  else if(s.view==='processing')html=renderProgress();
  else if(s.view==='result')html=renderResultPage();
