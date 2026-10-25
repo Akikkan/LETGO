@@ -1,42 +1,90 @@
-# 拾光
+<p align="center">
+  <img src="src/icon.png" width="128" height="128" alt="LETGO Logo" style="border-radius: 28px; box-shadow: 0 8px 24px rgba(0,0,0,0.15);" />
+</p>
 
-拾光是一款本地照片与视频整理工具。它扫描你选择的文件夹，在本机保存筛选进度，并按旅程、地点和标签整理选中的素材。首版不连接联网 AI；如需外部 AI 协助，可由你手动导出 JSON 清单、再导入建议。
+<h1 align="center">LETGO · 翻片</h1>
 
-## 启动
+<p align="center">
+  <b>放手废片，留下心动瞬间。</b><br>
+  专为摄影师与旅行爱好者打造的极简随性照片/视频快速挑选整理桌面应用。
+</p>
 
-Windows v0.2：关闭旧版，打开完整的 `release-v0.2/Shiguang-win32-x64` 文件夹，再运行其中的 `拾光.exe`。请保留并复制整个文件夹；单独复制 exe 无法启动应用。新版沿用原来的本地项目记录和整理进度。
+<p align="center">
+  <img src="https://img.shields.io/badge/Electron-45.0-47848F?logo=electron&logoColor=white" alt="Electron">
+  <img src="https://img.shields.io/badge/Node.js-20+-339933?logo=node.js&logoColor=white" alt="Node.js">
+  <img src="https://img.shields.io/badge/Platform-Windows%20%7C%20macOS-informational" alt="Platform">
+  <img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License">
+</p>
 
-## v0.2 界面与图片操作
+---
 
-- 左侧项目栏可展开、收起；点击项目继续整理，齿轮进入该项目设置。首页可新建项目和打开历史项目。
-- 窗口变大、变小时，图片区按可用空间调整。较窄窗口的侧栏以抽屉形式打开。
-- 图片下方滑条默认居中，为“适应窗口”。左侧缩小至适应尺寸的 25%，右侧放大至 800%；点击“适应”或双击图片复位。
-- 放大后按住鼠标左键拖动图片。拖动时右下角显示缩略图和当前可见区域，松开收起；图片没有横纵滚动条。
-- 同一张图片打标签时保留缩放和位置；切换图片后自动回到适应窗口。
+## 🌟 特色功能
 
-macOS 源码构建：在 `shiguang-desktop` 目录运行：
+* ⚡️ **纯键盘流极速挑片**：右手鼠标自由缩放看细节，左手 `F`（收录）、`D`（跳过）、`X`（确认删除），如老相机转动过片扳手般行云流水。
+* 🎨 **专业色彩与影调罗盘 (Tone & Harmony Compass)**：
+  * **冷暖色温双极能量条**：实时计算全图冷暖比例（如 `冷调 64% 🧊 ⸺●⸺ 🔥 暖调 36%`）并动态指示色彩重心；
+  * **影调倾向评级**：智能辨识高调空气感（High-Key）、中调均衡（Mid-Tone）与深邃暗光（Low-Key）；
+  * **画面 5 色主调提取**：提取占比最大的 5 种主色，标注真实面积占比，点击一键复制 HEX 代码。
+* 🌊 **P3 液态玻璃与悬浮水滴工学**：全局精致的毛玻璃折射、跟随光标的流动微光、日产 Fender Lake Placid Blue 复古湖水蓝与 Codex 预设。
+* 🔍 **光标中心滚轮缩放与对焦检查**：以鼠标指针所在位置为中心实时平滑缩放，辅以小地图视野框，查焦一目了然。
+* 📊 **里程碑成就感进度条**：在 25% / 50% / 75% 处点亮高光刻度，100% 达成时弹跳庆祝，让整理素材不再是枯燥负担。
+* 🔒 **100% 纯本地运行与安全非破坏性**：所有扫描、EXIF 提取、色彩计算与文件整理全部在本地进行，零网络外传，删除与归档自动受系统回收站保护。
 
-```sh
-npm ci
-npm run package:mac
+---
+
+## ⌨️ 常用快捷键
+
+| 按键 | 功能 |
+| :--- | :--- |
+| <kbd>F</kbd> | **收录** 当前素材（Keep） |
+| <kbd>D</kbd> | **跳过** 当前素材（Skip） |
+| <kbd>X</kbd> | **标记删除** 当前素材（Reject） |
+| <kbd>Ctrl</kbd> / <kbd>⌘</kbd> + <kbd>Z</kbd> | **撤销** 上一步操作 |
+| <kbd>I</kbd> | 展开 / 收起右侧 **素材检查器与影调罗盘** |
+| 鼠标滚轮 | 以光标为中心放大 / 缩小图片 |
+| <kbd>←</kbd> / <kbd>→</kbd> | 上一张 / 下一张素材 |
+| <kbd>Q</kbd> / <kbd>W</kbd> / <kbd>E</kbd> / <kbd>R</kbd> / <kbd>T</kbd> / <kbd>Y</kbd> | 快速打上对应预设标签 |
+| <kbd>Shift</kbd> + <kbd>Q</kbd> | 弹窗新建自定义标签 |
+| <kbd>Space</kbd> (空格) | 播放 / 暂停视频预览 |
+| <kbd>J</kbd> / <kbd>L</kbd> | 视频快退 5 秒 / 快进 5 秒 |
+
+---
+
+## 🚀 快速上手与本地开发
+
+### 环境要求
+* [Node.js](https://nodejs.org/) >= 20.0.0
+* npm >= 10.0.0
+
+### 安装依赖并启动
+```bash
+# 克隆仓库
+git clone https://github.com/Akikkan/LETGO.git
+cd LETGO
+
+# 安装依赖
+npm install
+
+# 本地热编译启动
+npm start
 ```
 
-构建产物写入对应版本的 `release-v0.2` 目录。macOS 构建尚未经过真机验收。Windows 与 macOS 构建目前均为未签名的开发版本。
+### 构建与打包
 
-## 整理素材
+#### Windows 构建
+```bash
+npm run package:win
+```
+产物将输出在 `release-v0.2/LETGO-win32-x64/` 目录下。
 
-1. 选择一个包含照片和视频的工作区文件夹。拾光会递归扫描支持的文件，并在应用中逐项筛选。
-2. 将素材标为收录、跳过或删除。执行前必须复审所有标为删除的素材。
-3. 选择独立于源文件夹的收录目录，软件会在其中建立“旅程 / 地点”子文件夹。收录项默认复制；也可选择移动。移动会先复制并校验副本，再将原件移入系统回收站。删除项也会移入系统回收站。
+#### macOS 构建
+```bash
+npm run package:mac        # Apple Silicon (M1/M2/M3/M4)
+npm run package:mac:intel  # Intel x64
+```
 
-应用识别常见图像扩展名（JPG/JPEG、PNG、WebP、GIF、HEIC/HEIF 和部分相机 RAW 格式）及 MP4、MOV、M4V、MKV 视频。能否预览取决于当前系统和 Electron/Chromium 支持的解码格式；HEIC、RAW 或 HEVC 视频可能无法预览，但仍可在清单中查看并选择跳过。
+---
 
-JPEG 和 TIFF 文件会读取 EXIF 拍摄时间，优先使用 DateTimeOriginal，其次使用 DateTime。读取不到时，整理文件名会尝试从原文件名中的日期时间生成时间部分；界面会显示未读取到拍摄时间。归档文件名由旅程、地点、首个标签或素材类型、时间和扩展名组成；重名时会自动添加序号。
+## 📄 开源许可
 
-工作区的设置、筛选状态和操作记录会保存在系统为应用分配的 userData 目录中，关闭后再次启动仍可继续。源文件留在原位置，直到你明确执行移动或删除操作。
-
-## JSON 清单与建议
-
-在 AI 助手页面主动选择“导出素材清单”后，拾光会通过系统保存对话框写出 JSON 文件。清单包含工作区路径、素材相对路径、文件名、大小、时间和标签等信息，不包含素材本身。请注意路径和文件名可能透露个人信息。
-
-首版没有内置或联网 AI。你可以自行把清单交给本地工具处理，再导入符合 [AGENT-INTERFACE.md](docs/AGENT-INTERFACE.md) 结构的建议 JSON。导入只保存建议字段；筛选状态仍由你在拾光中确认。复制、移动和删除等文件操作也需要在应用中预览并确认。
+本项目基于 [MIT 许可证](LICENSE) 开源。欢迎 Star、Fork 与提交 Issue / PR 交流灵感！
