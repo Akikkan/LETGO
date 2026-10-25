@@ -127,6 +127,19 @@ function render(){
      mediaEl.addEventListener('loadeddata',()=>inspector.updateAnalysis(mediaEl),{once:true});
     }
    }
+   if(p&&p.kind==='photo'&&!p.camera&&!p.focal35&&!p._metaChecked){
+    p._metaChecked=true;
+    api.metadata(workspace.id,p.id).then(meta=>{
+     if(meta&&Object.keys(meta).length){
+      Object.assign(p,meta);
+      if(photos[s.index]?.id===p.id){
+       inspSidebar.innerHTML=inspector.render(p,inspectorOpen);
+       const m=page.querySelector('.review-image, .review-video');
+       if(m)inspector.updateAnalysis(m);
+      }
+     }
+    }).catch(()=>{});
+   }
   }
  }
  if(s.newTag){page.insertAdjacentHTML('beforeend','<div class="tag-dialog" role="dialog" aria-modal="true" aria-label="新建标签"><form id="tag-form"><input id="tag-name" maxlength="40" aria-label="标签名称" placeholder="标签名称" autocomplete="off"><button type="button" class="button" data-action="cancel-tag">取消</button><button class="button primary" type="submit">添加</button></form></div>');page.querySelector('#tag-name').focus();}

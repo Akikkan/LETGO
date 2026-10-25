@@ -18,6 +18,7 @@ function syncProjectSidebarButton() {
   const expanded = projectSidebarMedia.matches
     ? root.classList.contains('sidebar-open')
     : !root.classList.contains('sidebar-collapsed');
+  button.classList.toggle('is-active', expanded);
   button.setAttribute('aria-expanded', String(expanded));
   button.setAttribute('aria-label', expanded ? '收起项目栏' : '展开项目栏');
   button.title = expanded ? '收起项目栏' : '展开项目栏';

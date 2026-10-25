@@ -69,7 +69,7 @@ function createInspector() {
           <span class="inspector-hist-badge">RGB / 亮度</span>
         </div>
         <div class="inspector-canvas-box">
-          <canvas class="inspector-histogram-canvas" width="256" height="88" aria-label="RGB 与亮度直方图"></canvas>
+          <canvas class="inspector-histogram-canvas" width="290" height="92" aria-label="RGB 与亮度直方图"></canvas>
           <div class="inspector-clipping-row">
             <span class="clipping-pill shadow-pill" id="shadow-clipping">● 暗部: 0.0%</span>
             <span class="clipping-pill highlight-pill" id="highlight-clipping">● 高光: 0.0%</span>
@@ -148,6 +148,22 @@ function createInspector() {
     if (!canvas) return;
     ctx = canvas.getContext('2d');
     if (!ctx) return;
+
+    if (imgOrVideoElement.tagName === 'IMG') {
+      if (!imgOrVideoElement.complete || !imgOrVideoElement.naturalWidth) {
+        imgOrVideoElement.addEventListener('load', () => updateAnalysis(imgOrVideoElement), { once: true });
+        imgOrVideoElement.addEventListener('error', () => {
+          const list = sidebar.querySelector('#inspector-palette-list');
+          if (list) list.innerHTML = `<span class="inspector-sub">图片加载失败</span>`;
+        }, { once: true });
+        return;
+      }
+    } else if (imgOrVideoElement.tagName === 'VIDEO') {
+      if (imgOrVideoElement.readyState < 2 || !imgOrVideoElement.videoWidth) {
+        imgOrVideoElement.addEventListener('loadeddata', () => updateAnalysis(imgOrVideoElement), { once: true });
+        return;
+      }
+    }
 
     // Use a small offscreen canvas to sample pixels quickly (under 2ms)
     try {
@@ -239,8 +255,9 @@ function createInspector() {
       }
 
       renderPalette(sidebar, palette);
-    } catch {
-      // Cross-origin or detached media error suppressed
+    } catch (err) {
+      const list = sidebar.querySelector('#inspector-palette-list');
+      if (list) list.innerHTML = `<span class="inspector-sub">已准备就绪</span>`;
     }
   }
 

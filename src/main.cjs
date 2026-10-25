@@ -6,7 +6,10 @@ const {readMetadata}=require('./metadata.cjs');
 app.setName('拾光');
 const testMode=!app.isPackaged&&process.env.SHIGUANG_TEST==='1';
 if(testMode&&process.env.SHIGUANG_TEST_DATA)app.setPath('userData',process.env.SHIGUANG_TEST_DATA);
-protocol.registerSchemesAsPrivileged([{scheme:'sgapp',privileges:{standard:true,secure:true,supportFetchAPI:true}},{scheme:'sgmedia',privileges:{standard:true,secure:true,stream:true,supportFetchAPI:true}}]);
+protocol.registerSchemesAsPrivileged([
+  {scheme:'sgapp',privileges:{standard:true,secure:true,supportFetchAPI:true,corsEnabled:true}},
+  {scheme:'sgmedia',privileges:{standard:true,secure:true,stream:true,supportFetchAPI:true,corsEnabled:true}}
+]);
 let win,store,working=false,preferences={theme:'light',translucent:true,colorTheme:'codex',customAccent:null,keepColor:null};
 const opened=new Map(),plans=new Map();
 function cache(w){if(w?.id&&Array.isArray(w.items))opened.set(w.id,{...w,itemMap:new Map(w.items.map(i=>[i.id,i]))});return w;}
@@ -18,11 +21,12 @@ async function savePrefs(value){preferences={theme:value?.theme==='dark'?'dark':
 function applyNativeAppearance(){nativeTheme.themeSource=preferences.theme;if(process.platform==='win32'){try{win?.setBackgroundMaterial(preferences.translucent?'acrylic':'none')}catch{}}if(process.platform==='darwin'){try{win?.setVibrancy(preferences.translucent?'under-window':null)}catch{}}win?.setBackgroundColor(preferences.translucent?'#00000000':preferences.theme==='dark'?'#202630':'#f0f4fa');}
 async function registerProtocols(){
  protocol.handle('sgapp',async request=>{const u=new URL(request.url);const filename=decodeURIComponent(u.pathname);if(u.hostname!=='ui'||!['/index.html','/app.js','/style.css'].includes(filename))return new Response('',{status:404});return net.fetch(pathToFileURL(path.join(__dirname,'../ui',filename)).href);});
- protocol.handle('sgmedia',async request=>{try{const u=new URL(request.url),w=opened.get(u.hostname),item=w?.itemMap.get(decodeURIComponent(u.pathname.slice(1)));if(!item||item.trashed)return new Response('',{status:404});const target=path.resolve(w.sourceDir,item.relativePath),relative=path.relative(w.sourceDir,target);if(relative.startsWith('..')||path.isAbsolute(relative))throw Error('Invalid path');const canonical=await safeRealpath(target),expected=process.platform==='win32'?target.toLowerCase():target,actual=process.platform==='win32'?canonical.toLowerCase():canonical;if(expected!==actual)throw Error('Changed path');const stat=await fs.stat(target);if(!stat.isFile())throw Error('Not a file');const headers={};if(request.headers.get('range'))headers.Range=request.headers.get('range');return net.fetch(pathToFileURL(target).href,{headers});}catch{return new Response('',{status:404})}});
+ protocol.handle('sgmedia',async request=>{try{const u=new URL(request.url),w=opened.get(u.hostname),item=w?.itemMap.get(decodeURIComponent(u.pathname.slice(1)));if(!item||item.trashed)return new Response('',{status:404});const target=path.resolve(w.sourceDir,item.relativePath),relative=path.relative(w.sourceDir,target);if(relative.startsWith('..')||path.isAbsolute(relative))throw Error('Invalid path');const canonical=await safeRealpath(target),expected=process.platform==='win32'?target.toLowerCase():target,actual=process.platform==='win32'?canonical.toLowerCase():canonical;if(expected!==actual)throw Error('Changed path');const stat=await fs.stat(target);if(!stat.isFile())throw Error('Not a file');const headers={};if(request.headers.get('range'))headers.Range=request.headers.get('range');const res=await net.fetch(pathToFileURL(target).href,{headers});const resHeaders=new Headers(res.headers);resHeaders.set('Access-Control-Allow-Origin','*');resHeaders.set('Access-Control-Allow-Methods','GET, HEAD, OPTIONS');return new Response(res.body,{status:res.status,statusText:res.statusText,headers:resHeaders});}catch{return new Response('',{status:404})}});
 }
 function installHandlers(){
  handle('app:bootstrap',async()=>({version:app.getVersion(),preferences,recent:await store.list(),platform:process.platform}));
  handle('app:appearance',savePrefs);
+ handle('item:metadata',async(id,itemId)=>{const w=opened.get(id)||await store.load(id);const item=w?.items?.find(i=>i.id===itemId);if(!item)return null;const target=path.resolve(w.sourceDir,item.relativePath);return readMetadata(target,{name:item.name,relativePath:item.relativePath,extension:'.'+item.extension});});
  handle('workspace:choose',async()=>{const dir=await chooseDirectory('选择工作区');if(!dir)return null;return cache(await store.open(dir));});
  handle('workspace:load',async id=>cache(await store.load(id)));
  handle('workspace:list',()=>store.list());

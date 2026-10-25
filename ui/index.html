@@ -9,7 +9,44 @@
   </aside>
   <div class="main-panel">
    <button class="sidebar-backdrop" type="button" data-action="close-sidebar" aria-label="关闭项目栏" tabindex="-1"></button>
-   <div class="app-chrome"><button id="sidebar-toggle" class="button" type="button" data-action="toggle-sidebar" aria-controls="project-sidebar" aria-expanded="true" aria-label="收起项目栏" title="收起项目栏">☰</button><button class="brand" data-action="home" aria-label="工作区首页">拾光</button><span class="workspace-title"></span><span id="save-state" role="status"></span><button class="button" data-action="toggle-theme" aria-label="切换日间暗夜">☀</button><button class="button" data-action="toggle-translucency" aria-label="半透明" aria-pressed="true">◐</button><button id="inspector-toggle" class="button" type="button" data-action="toggle-inspector" aria-controls="inspector-sidebar" aria-expanded="true" aria-label="切换素材检查器 (I)" title="素材检查器 (I)">ℹ</button><button class="button" data-action="choose-folder" aria-label="打开工作区">▱</button><button class="button" data-action="settings" aria-label="设置">⚙</button><button class="button" data-action="help" aria-label="快捷键">?</button></div>
+   <div class="app-chrome">
+    <div class="app-chrome-left">
+     <button id="sidebar-toggle" class="button chrome-toggle-btn" type="button" data-action="toggle-sidebar" aria-controls="project-sidebar" aria-expanded="true" aria-label="收起项目栏" title="项目栏 (切换)">
+      <svg class="chrome-toggle-icon" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true">
+       <rect class="bar-seg seg-short" x="1" y="2" width="3.5" height="2" rx="1"/>
+       <rect class="bar-seg seg-long" x="6" y="2" width="9" height="2" rx="1"/>
+       <rect class="bar-seg seg-short" x="1" y="7" width="3.5" height="2" rx="1"/>
+       <rect class="bar-seg seg-long" x="6" y="7" width="9" height="2" rx="1"/>
+       <rect class="bar-seg seg-short" x="1" y="12" width="3.5" height="2" rx="1"/>
+       <rect class="bar-seg seg-long" x="6" y="12" width="9" height="2" rx="1"/>
+      </svg>
+     </button>
+     <button class="brand" data-action="home" aria-label="工作区首页">拾光</button>
+     <span class="workspace-title"></span>
+    </div>
+    <div class="app-chrome-center">
+     <span id="save-state" role="status"></span>
+     <div class="chrome-tools-capsule">
+      <button class="button capsule-btn" data-action="toggle-theme" aria-label="切换日间暗夜" title="日间 / 暗夜外观">☀</button>
+      <button class="button capsule-btn" data-action="toggle-translucency" aria-label="半透明" aria-pressed="true" title="液态玻璃效果">◐</button>
+      <button class="button capsule-btn" data-action="choose-folder" aria-label="打开工作区" title="打开其他工作区">▱</button>
+      <button class="button capsule-btn" data-action="settings" aria-label="设置" title="系统偏好设置">⚙</button>
+      <button class="button capsule-btn" data-action="help" aria-label="快捷键" title="快捷键帮助">?</button>
+     </div>
+    </div>
+    <div class="app-chrome-right">
+     <button id="inspector-toggle" class="button chrome-toggle-btn" type="button" data-action="toggle-inspector" aria-controls="inspector-sidebar" aria-expanded="true" aria-label="切换素材检查器 (I)" title="素材检查器 (I)">
+      <svg class="chrome-toggle-icon" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true">
+       <rect class="bar-seg seg-long" x="1" y="2" width="9" height="2" rx="1"/>
+       <rect class="bar-seg seg-short" x="11.5" y="2" width="3.5" height="2" rx="1"/>
+       <rect class="bar-seg seg-long" x="1" y="7" width="9" height="2" rx="1"/>
+       <rect class="bar-seg seg-short" x="11.5" y="7" width="3.5" height="2" rx="1"/>
+       <rect class="bar-seg seg-long" x="1" y="12" width="9" height="2" rx="1"/>
+       <rect class="bar-seg seg-short" x="11.5" y="12" width="3.5" height="2" rx="1"/>
+      </svg>
+     </button>
+    </div>
+   </div>
    <main id="sg-page"><section class="flow-page"><p class="muted">正在打开…</p></section></main><div id="sg-toast" role="status" aria-live="polite"></div>
   </div>
   <aside id="inspector-sidebar" aria-label="素材信息检查器" class="inspector-sidebar"></aside>
