@@ -13,7 +13,7 @@
 #shiguang .review-head{display:flex;align-items:center;gap:12px;margin:0 0 10px;min-width:0}.review-name{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12px;color:var(--muted)}.review-mode{margin-left:8px;color:var(--ink)}.review-progress{margin-left:auto;display:flex;align-items:center;gap:8px;white-space:nowrap;font-size:11px;color:var(--muted)}.review-progress strong{color:var(--ink);font-weight:600}.review-bar{width:clamp(60px,12vw,140px);height:5px;overflow:hidden;border-radius:8px;background:var(--line)}.review-bar-fill{display:block;height:100%;border-radius:inherit;background:var(--accent);transition:width .2s}.review-done{font-size:16px}
 #shiguang .review-photo{position:relative;display:flex;align-items:center;justify-content:center;width:100%;height:min(58vh,460px);min-height:190px;overflow:hidden;border:1px solid var(--line);border-radius:16px;background:var(--paper)}.review-image,.review-video{display:block;max-width:100%;max-height:420px;width:auto;height:auto;object-fit:contain}.review-video{width:100%;height:100%;max-height:460px}.review-empty{color:var(--muted);font-size:13px}.review-status{position:absolute;top:10px;right:10px;padding:5px 9px;border-radius:8px;background:var(--surface);color:var(--ink);font-size:11px}.review-zoom{position:absolute;top:10px;left:10px;width:34px;height:34px;border:1px solid var(--line);border-radius:50%;background:var(--surface);font-size:17px;line-height:1}.review-video-demo{position:absolute;left:10px;top:10px;padding:4px 7px;border:1px solid var(--line);border-radius:7px;background:var(--surface);color:var(--muted);font-size:10px}.review-video-controls{position:absolute;left:50%;bottom:10px;transform:translateX(-50%);display:flex;align-items:center;gap:8px;max-width:calc(100% - 20px);padding:6px 10px;border:1px solid var(--line);border-radius:999px;background:var(--surface)}.review-video-controls button{border:0;background:transparent;font-size:12px}.review-video-controls input{width:clamp(55px,14vw,130px);accent-color:var(--accent)}.review-video-controls span{font-size:10px;color:var(--muted)}
 #shiguang .review-dock{margin-top:10px;padding:10px 12px;border:1px solid var(--line);border-radius:16px;background:var(--surface)}.review-tag-row{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:6px}.review-tag{display:flex;align-items:center;gap:6px;padding:6px 9px;border:1px solid var(--line);border-radius:999px;background:transparent;font-size:11px}.review-tag:hover,.review-tag.is-active{border-color:var(--accent);background:var(--soft);color:var(--accent)}.review-tag kbd,.review-btn kbd{font:inherit;font-size:10px;color:var(--muted)}.review-new-tag{width:30px;height:30px;border:1px dashed var(--line);border-radius:50%;background:transparent;font-size:17px;line-height:1}.review-ai-toggle{display:flex;align-items:center;gap:5px;padding:5px 8px;border:1px solid var(--line);border-radius:999px;background:transparent;color:var(--muted);font-size:10px}.review-ai-toggle[aria-pressed="true"]{color:var(--accent);border-color:var(--accent)}.review-ai-dot{width:6px;height:6px;border-radius:50%;background:var(--muted)}.review-ai-toggle[aria-pressed="true"] .review-ai-dot{background:var(--accent)}
-#shiguang .review-actions{display:flex;align-items:center;flex-wrap:wrap;gap:7px;margin-top:9px;padding-top:9px;border-top:1px solid var(--line)}.review-btn{min-height:36px;padding:7px 10px;border:1px solid var(--line);border-radius:9999px;background:var(--droplet-bg);font-size:11px;white-space:nowrap;color:var(--ink)}.review-btn:hover:not(:disabled){background:var(--soft)}.review-btn:disabled{opacity:.4;cursor:default}.review-btn.primary{background:linear-gradient(175deg,#3b82f6 0%,#1d4ed8 100%)!important;border-color:rgba(255,255,255,0.35)!important;color:#ffffff!important;font-weight:600;text-shadow:0 1px 2px rgba(0,0,0,0.25)}.review-btn.primary:hover:not(:disabled){filter:brightness(1.05)}.review-btn .review-icon{margin-right:4px;font-size:14px}.review-spacer{flex:1 1 12px}.review-count{color:var(--muted);font-size:11px;font-weight:500}.review-nav{display:flex;align-items:center;gap:5px}
+#shiguang .review-actions{display:flex;align-items:center;flex-wrap:wrap;gap:7px;margin-top:9px;padding-top:9px;border-top:1px solid var(--line)}.review-btn{min-height:36px;padding:7px 10px;border:1px solid var(--line);border-radius:9999px;background:var(--droplet-bg);font-size:11px;white-space:nowrap;color:var(--ink)}.review-btn:hover:not(:disabled){background:var(--soft)}.review-btn:disabled{opacity:.4;cursor:default}.review-btn.primary{background:var(--accent-gradient)!important;border-color:rgba(255,255,255,0.35)!important;color:#ffffff!important;font-weight:600;text-shadow:0 1px 2px rgba(0,0,0,0.25)}.review-btn.primary:hover:not(:disabled){filter:brightness(1.05)}.review-btn .review-icon{margin-right:4px;font-size:14px}.review-spacer{flex:1 1 12px}.review-count{color:var(--muted);font-size:11px;font-weight:500}.review-nav{display:flex;align-items:center;gap:5px}
 @media(max-width:480px){#shiguang .review{padding:8px}.review-photo{height:min(54vh,400px);min-height:180px;border-radius:12px}.review-image{max-height:390px}.review-dock{padding:8px}.review-tag-row{justify-content:flex-start;gap:5px}.review-tag{padding:6px 7px;gap:4px;font-size:10px}.review-actions{gap:5px}.review-btn{min-height:36px;padding:6px 7px;font-size:10px}.review-spacer{display:none}}
 
 #shiguang, #shiguang[data-theme="light"] {
@@ -25,10 +25,13 @@
   --muted: #475569;
   --line: rgba(15, 23, 42, 0.12);
   --line-strong: rgba(15, 23, 42, 0.22);
-  --accent: #1a62dc;
-  --accent-hover: #1551be;
+  /* Japanese Fender Telecaster Lake Placid Blue (Restrained vintage metallic cyan-slate) */
+  --accent: #376a8d;
+  --accent-hover: #2b5674;
   --accent-contrast: #ffffff;
-  --soft: #e2edfd;
+  --accent-gradient: linear-gradient(175deg, #447b9f 0%, #2b5776 100%);
+  --soft: rgba(55, 106, 141, 0.10);
+  --soft-border: rgba(55, 106, 141, 0.22);
   --glass: rgba(255, 255, 255, 0.72);
   --glass-dock: rgba(255, 255, 255, 0.68);
   --glint: rgba(255, 255, 255, 0.90);
@@ -36,7 +39,7 @@
   --droplet-bg: linear-gradient(180deg, rgba(255, 255, 255, 0.88) 0%, rgba(240, 245, 252, 0.72) 100%);
   --droplet-border: rgba(255, 255, 255, 0.85);
   --droplet-shadow: 0 4px 14px rgba(15, 23, 42, 0.06), inset 0 1.2px 1.2px rgba(255, 255, 255, 0.95), inset 0 -1px 2px rgba(0, 0, 0, 0.04);
-  --droplet-hover-shadow: 0 8px 24px rgba(26, 98, 220, 0.15), inset 0 1.5px 1.5px rgba(255, 255, 255, 1);
+  --droplet-hover-shadow: 0 8px 24px rgba(55, 106, 141, 0.15), inset 0 1.5px 1.5px rgba(255, 255, 255, 1);
 }
 
 #shiguang[data-theme="dark"] {
@@ -48,10 +51,13 @@
   --muted: #94a3b8;
   --line: rgba(255, 255, 255, 0.12);
   --line-strong: rgba(255, 255, 255, 0.24);
-  --accent: #3b82f6;
-  --accent-hover: #60a5fa;
+  /* Japanese Fender Telecaster Lake Placid Blue in Dark Mode (Metallic Ice Frost) */
+  --accent: #5e97be;
+  --accent-hover: #75abd0;
   --accent-contrast: #ffffff;
-  --soft: rgba(59, 130, 246, 0.20);
+  --accent-gradient: linear-gradient(175deg, #4f86ab 0%, #305f80 100%);
+  --soft: rgba(94, 151, 190, 0.16);
+  --soft-border: rgba(94, 151, 190, 0.28);
   --glass: rgba(22, 28, 38, 0.75);
   --glass-dock: rgba(24, 32, 44, 0.75);
   --glint: rgba(255, 255, 255, 0.18);
@@ -59,7 +65,7 @@
   --droplet-bg: linear-gradient(180deg, rgba(38, 48, 64, 0.78) 0%, rgba(24, 31, 42, 0.82) 100%);
   --droplet-border: rgba(255, 255, 255, 0.16);
   --droplet-shadow: 0 6px 18px rgba(0, 0, 0, 0.35), inset 0 1.2px 1.2px rgba(255, 255, 255, 0.25), inset 0 -1.5px 2px rgba(0, 0, 0, 0.4);
-  --droplet-hover-shadow: 0 8px 26px rgba(59, 130, 246, 0.25), inset 0 1.5px 1.5px rgba(255, 255, 255, 0.35);
+  --droplet-hover-shadow: 0 8px 26px rgba(94, 151, 190, 0.22), inset 0 1.5px 1.5px rgba(255, 255, 255, 0.35);
 }
 
 #shiguang {
@@ -110,7 +116,6 @@
 #shiguang .review-zoom,
 #shiguang .droplet-btn {
   position: relative;
-  isolation: isolate;
   background: var(--droplet-bg);
   border: 1px solid var(--droplet-border);
   border-radius: 9999px;
@@ -153,16 +158,16 @@
   outline-offset: 3px;
 }
 
-/* Primary Liquid Gem Droplet - Always crisp high contrast white text */
+/* Primary Liquid Gem Droplet - Japanese Fender Telecaster Metallic Lacquer */
 #shiguang .button.primary,
 #shiguang .review button.primary,
 #shiguang .droplet-btn.primary,
 #shiguang .button.is-active,
 #shiguang .droplet-btn.is-active {
-  background: linear-gradient(175deg, #3b82f6 0%, #1d4ed8 100%) !important;
+  background: var(--accent-gradient) !important;
   color: #ffffff !important;
   border-color: rgba(255, 255, 255, 0.35) !important;
-  box-shadow: 0 4px 16px rgba(29, 78, 216, 0.35), inset 0 1.5px 1px rgba(255, 255, 255, 0.75), inset 0 -2px 3px rgba(0, 0, 0, 0.25) !important;
+  box-shadow: 0 4px 14px rgba(43, 87, 118, 0.35), inset 0 1.5px 1px rgba(255, 255, 255, 0.75), inset 0 -2px 3px rgba(0, 0, 0, 0.25) !important;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
   font-weight: 600;
 }
@@ -170,7 +175,7 @@
 #shiguang .button.primary:hover:not(:disabled),
 #shiguang .review button.primary:hover:not(:disabled),
 #shiguang .droplet-btn.primary:hover:not(:disabled) {
-  box-shadow: 0 8px 24px rgba(29, 78, 216, 0.48), inset 0 1.5px 1.5px rgba(255, 255, 255, 0.9) !important;
+  box-shadow: 0 8px 22px rgba(43, 87, 118, 0.45), inset 0 1.5px 1.5px rgba(255, 255, 255, 0.9) !important;
   transform: translateY(-2px) scale(1.025);
 }
 
@@ -279,7 +284,7 @@
   inset: 0;
   z-index: -1;
   pointer-events: none;
-  background: radial-gradient(ellipse at 95% 0, light-dark(rgba(185, 213, 255, 0.22), rgba(138, 182, 255, 0.08)), transparent 60%);
+  background: radial-gradient(ellipse at 95% 0, light-dark(rgba(68, 123, 159, 0.12), rgba(94, 151, 190, 0.06)), transparent 60%);
 }
 
 #shiguang .review-tag-row {
@@ -376,7 +381,7 @@
 
 #shiguang .home-entry {
   min-height: 470px;
-  background: radial-gradient(ellipse at 50% 40%, light-dark(rgba(225, 234, 247, 0.4), rgba(53, 76, 108, 0.2)), transparent 60%);
+  background: radial-gradient(ellipse at 50% 40%, light-dark(rgba(68, 123, 159, 0.15), rgba(43, 87, 118, 0.12)), transparent 60%);
 }
 
 #shiguang .home-folder {
@@ -482,11 +487,12 @@
   -webkit-backdrop-filter: blur(28px) saturate(180%);
 }
 
+/* Left sidebar: significantly more translucent/airy like reference image */
 #shiguang.translucent #project-sidebar {
-  background: light-dark(rgba(255, 255, 255, 0.35), rgba(18, 24, 34, 0.45)) !important;
-  backdrop-filter: blur(24px) saturate(160%);
-  -webkit-backdrop-filter: blur(24px) saturate(160%);
-  border-right: 1px solid var(--glint);
+  background: light-dark(rgba(255, 255, 255, 0.16), rgba(12, 16, 23, 0.25)) !important;
+  backdrop-filter: blur(32px) saturate(180%);
+  -webkit-backdrop-filter: blur(32px) saturate(180%);
+  border-right: 1px solid light-dark(rgba(255, 255, 255, 0.25), rgba(255, 255, 255, 0.06)) !important;
 }
 
 #shiguang.translucent .app-chrome {
@@ -497,21 +503,11 @@
 }
 
 #shiguang.translucent .sidebar-new-project {
-  background: light-dark(rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.08)) !important;
+  background: light-dark(rgba(255, 255, 255, 0.60), rgba(255, 255, 255, 0.08)) !important;
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
   border: 1px solid var(--glint);
   box-shadow: 0 4px 14px var(--shade), inset 0 1px 1px var(--glint);
-}
-
-#shiguang.translucent .project-row:hover {
-  background: light-dark(rgba(255, 255, 255, 0.65), rgba(255, 255, 255, 0.12)) !important;
-}
-
-#shiguang.translucent .project-row.is-active {
-  background: light-dark(rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.20)) !important;
-  border: 1px solid var(--glint);
-  box-shadow: 0 4px 14px var(--shade), inset 0 1px 1.5px var(--glint);
 }
 
 #shiguang.translucent .review-dock {
@@ -785,7 +781,7 @@ html, body {
 }
 
 #shiguang .tag-chip {
-  padding: 5px 12px;
+  padding: 5px 13px;
   border-radius: 9999px;
   font-size: 11px;
   font-weight: 500;
@@ -802,7 +798,7 @@ html, body {
   color: var(--accent);
   border-color: var(--accent);
   transform: translateY(-2px) scale(1.02);
-  box-shadow: 0 6px 16px rgba(35, 104, 230, 0.22);
+  box-shadow: 0 6px 16px var(--soft-border);
 }
 
 #shiguang .unavailable {
@@ -960,10 +956,10 @@ html, body {
 }
 
 #shiguang .overview-mode-toggle .button[aria-pressed=true] {
-  background: var(--accent);
+  background: var(--accent-gradient);
   color: #ffffff !important;
   font-weight: 600;
-  box-shadow: 0 3px 10px rgba(35, 104, 230, 0.35);
+  box-shadow: 0 3px 10px rgba(43, 87, 118, 0.35);
 }
 
 #shiguang .overview-grid {
@@ -993,7 +989,7 @@ html, body {
 #shiguang .overview-card:hover {
   transform: translateY(-3px) scale(1.02);
   border-color: var(--accent);
-  box-shadow: 0 10px 28px rgba(35, 104, 230, 0.22);
+  box-shadow: 0 10px 28px var(--shade);
 }
 
 #shiguang .overview-card-thumb {
@@ -1040,7 +1036,7 @@ html, body {
 }
 
 #shiguang .overview-card-badge.status-keep {
-  background: rgba(35, 104, 230, 0.9);
+  background: rgba(55, 106, 141, 0.9);
   color: #ffffff;
 }
 
@@ -1213,7 +1209,7 @@ html, body {
   color: light-dark(#a6332f, #ffaaa6) !important;
 }
 
-/* Floating Camera Parameter Bar */
+/* Floating Camera Parameter Bar (Restrained Lake Placid Blue Accents) */
 #shiguang .camera-param-bar {
   position: absolute;
   left: 14px;
@@ -1239,7 +1235,7 @@ html, body {
 
 #shiguang .camera-param-bar:hover {
   transform: translateY(-2px) scale(1.02);
-  box-shadow: 0 10px 28px rgba(35, 104, 230, 0.25), inset 0 1.2px 1.2px var(--glint);
+  box-shadow: 0 10px 28px rgba(55, 106, 141, 0.25), inset 0 1.2px 1.2px var(--glint);
   border-color: var(--accent);
 }
 
@@ -1263,7 +1259,7 @@ html, body {
   opacity: 0.5;
 }
 
-/* Settings Segmented Control */
+/* Settings Segmented Control - Japanese Fender Telecaster Style */
 #shiguang .theme-segmented-control {
   display: inline-flex;
   padding: 4px;
@@ -1292,147 +1288,136 @@ html, body {
 }
 
 #shiguang .theme-segmented-control .button.is-active {
-  background: linear-gradient(175deg, #3b82f6 0%, #1d4ed8 100%) !important;
+  background: var(--accent-gradient) !important;
   color: #ffffff !important;
   font-weight: 600;
-  box-shadow: 0 4px 14px rgba(29, 78, 216, 0.4), inset 0 1.2px 1px rgba(255, 255, 255, 0.8) !important;
+  box-shadow: 0 4px 14px rgba(43, 87, 118, 0.38), inset 0 1.2px 1px rgba(255, 255, 255, 0.8) !important;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
 }
 
 /* ==========================================================================
-   CURSOR-FOLLOWING LIQUID SPECULAR & SURROUNDING HALO LIGHTING
-   (Replaces aggressive keyframe animation with organic pointer-tracking sheen)
+   LACQUER REFLECTION RIM GLEAM (Refined Japanese Fender Telecaster Bevel Glint)
+   - Zero light inside the button face (masked content-box)
+   - Follows the outer edge / meniscus boundary with micro-drop-shadow
+   - Prismatic metallic refraction: ice blue specular -> metallic cyan -> champagne glint
    ========================================================================== */
 
-/* 1. Internal Specular Liquid Glint (Tracks mouse position) */
-#shiguang .button::after,
-#shiguang .review-btn::after,
-#shiguang .overview-card::after,
-#shiguang .tag-chip::after,
-#shiguang .sidebar-new-project::after,
-#shiguang .camera-param-bar::after {
+#shiguang .button,
+#shiguang .review-btn,
+#shiguang .droplet-btn,
+#shiguang .tag-chip,
+#shiguang .sidebar-new-project,
+#shiguang .overview-card,
+#shiguang .camera-param-bar,
+#shiguang .project-row {
+  position: relative;
+}
+
+/* Edge-Only Masked Refraction Rim */
+#shiguang .button::before,
+#shiguang .review-btn::before,
+#shiguang .droplet-btn::before,
+#shiguang .tag-chip::before,
+#shiguang .sidebar-new-project::before,
+#shiguang .overview-card::before,
+#shiguang .camera-param-bar::before,
+#shiguang .project-row::before {
   content: '';
   position: absolute;
   inset: -1px;
   border-radius: inherit;
+  padding: 1.6px;
   pointer-events: none;
   opacity: 0;
-  transition: opacity .25s ease;
-  background: radial-gradient(
-    circle 65px at var(--mouse-x, 50%) var(--mouse-y, 50%),
-    rgba(255, 255, 255, 0.45),
-    rgba(255, 255, 255, 0.10) 45%,
-    transparent 75%
-  );
-  z-index: 2;
-}
+  box-sizing: border-box;
+  z-index: 4;
+  transition: opacity .22s cubic-bezier(0.2, 0, 0.1, 1);
 
-#shiguang[data-theme="dark"] .button::after,
-#shiguang[data-theme="dark"] .review-btn::after,
-#shiguang[data-theme="dark"] .overview-card::after,
-#shiguang[data-theme="dark"] .tag-chip::after,
-#shiguang[data-theme="dark"] .sidebar-new-project::after,
-#shiguang[data-theme="dark"] .camera-param-bar::after {
-  background: radial-gradient(
-    circle 70px at var(--mouse-x, 50%) var(--mouse-y, 50%),
-    rgba(255, 255, 255, 0.30),
-    rgba(96, 165, 250, 0.20) 45%,
-    transparent 75%
-  );
-}
+  /* Mask cuts out the interior so the body of the button stays 100% clean and transparent */
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
 
-#shiguang .button:hover::after,
-#shiguang .review-btn:hover::after,
-#shiguang .overview-card:hover::after,
-#shiguang .tag-chip:hover::after,
-#shiguang .sidebar-new-project:hover::after,
-#shiguang .camera-param-bar:hover::after {
-  opacity: 1;
-}
-
-/* 2. External Luminous Halo Surrounding the Cursor */
-#shiguang .button.primary::before,
-#shiguang .review-btn.primary::before,
-#shiguang .review-btn[data-action="keep"]::before {
-  content: '';
-  position: absolute;
-  inset: -3px;
-  border-radius: inherit;
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity .25s ease;
+  /* Fender Telecaster Metallic Lacquer Edge Refraction */
   background: radial-gradient(
     circle 85px at var(--mouse-x, 50%) var(--mouse-y, 50%),
-    rgba(59, 130, 246, 0.55),
-    transparent 70%
+    rgba(225, 245, 255, 0.98) 0%,
+    rgba(100, 172, 215, 0.85) 24%,
+    rgba(245, 230, 205, 0.40) 48%,
+    transparent 72%
   );
-  filter: blur(6px);
-  z-index: -1;
+  filter: drop-shadow(0 0 1.5px rgba(100, 172, 215, 0.65));
 }
 
-#shiguang .button.primary:hover::before,
-#shiguang .review-btn.primary:hover::before,
-#shiguang .review-btn[data-action="keep"]:hover::before {
-  opacity: 1;
+#shiguang[data-theme="dark"] .button::before,
+#shiguang[data-theme="dark"] .review-btn::before,
+#shiguang[data-theme="dark"] .droplet-btn::before,
+#shiguang[data-theme="dark"] .tag-chip::before,
+#shiguang[data-theme="dark"] .sidebar-new-project::before,
+#shiguang[data-theme="dark"] .overview-card::before,
+#shiguang[data-theme="dark"] .camera-param-bar::before,
+#shiguang[data-theme="dark"] .project-row::before {
+  background: radial-gradient(
+    circle 85px at var(--mouse-x, 50%) var(--mouse-y, 50%),
+    rgba(235, 250, 255, 0.98) 0%,
+    rgba(94, 151, 190, 0.88) 26%,
+    rgba(180, 215, 240, 0.38) 50%,
+    transparent 75%
+  );
+  filter: drop-shadow(0 0 1.5px rgba(94, 151, 190, 0.7));
 }
 
+/* Distinct Action Refractions on the Rim */
 #shiguang .review-btn[data-action="reject"]::before {
-  content: '';
-  position: absolute;
-  inset: -3px;
-  border-radius: inherit;
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity .25s ease;
   background: radial-gradient(
     circle 85px at var(--mouse-x, 50%) var(--mouse-y, 50%),
-    rgba(239, 68, 68, 0.55),
-    transparent 70%
-  );
-  filter: blur(6px);
-  z-index: -1;
-}
-
-#shiguang .review-btn[data-action="reject"]:hover::before {
-  opacity: 1;
+    rgba(255, 235, 235, 0.98) 0%,
+    rgba(239, 68, 68, 0.88) 26%,
+    rgba(254, 202, 202, 0.40) 50%,
+    transparent 72%
+  ) !important;
+  filter: drop-shadow(0 0 1.5px rgba(239, 68, 68, 0.65)) !important;
 }
 
 #shiguang .review-btn[data-action="skip"]::before {
-  content: '';
-  position: absolute;
-  inset: -3px;
-  border-radius: inherit;
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity .25s ease;
   background: radial-gradient(
     circle 85px at var(--mouse-x, 50%) var(--mouse-y, 50%),
-    rgba(148, 163, 184, 0.45),
-    transparent 70%
-  );
-  filter: blur(6px);
-  z-index: -1;
+    rgba(255, 255, 255, 0.98) 0%,
+    rgba(148, 163, 184, 0.85) 26%,
+    rgba(203, 213, 225, 0.40) 50%,
+    transparent 72%
+  ) !important;
+  filter: drop-shadow(0 0 1.5px rgba(148, 163, 184, 0.5)) !important;
 }
 
-#shiguang .review-btn[data-action="skip"]:hover::before {
+/* Show edge reflection on hover */
+#shiguang .button:hover::before,
+#shiguang .review-btn:hover::before,
+#shiguang .droplet-btn:hover::before,
+#shiguang .tag-chip:hover::before,
+#shiguang .sidebar-new-project:hover::before,
+#shiguang .overview-card:hover::before,
+#shiguang .camera-param-bar:hover::before,
+#shiguang .project-row:hover::before {
   opacity: 1;
 }
 
 /* Distinct Action Buttons in Review */
 #shiguang .review-btn[data-action="keep"]:hover:not(:disabled) {
-  border-color: #60a5fa;
-  box-shadow: 0 8px 24px rgba(35, 104, 230, 0.4), inset 0 1.5px 1.5px var(--glint);
+  border-color: var(--accent);
+  box-shadow: 0 8px 24px rgba(55, 106, 141, 0.35), inset 0 1.5px 1.5px var(--glint);
 }
 
 #shiguang .review-btn[data-action="skip"]:hover:not(:disabled) {
   border-color: var(--glint);
-  box-shadow: 0 8px 20px rgba(100, 116, 139, 0.3), inset 0 1.5px 1.5px var(--glint);
+  box-shadow: 0 8px 20px rgba(100, 116, 139, 0.25), inset 0 1.5px 1.5px var(--glint);
 }
 
 #shiguang .review-btn[data-action="reject"]:hover:not(:disabled) {
   border-color: #f87171;
   color: #ef4444;
-  box-shadow: 0 8px 24px rgba(239, 68, 68, 0.35), inset 0 1.5px 1.5px rgba(255, 255, 255, 0.6);
+  box-shadow: 0 8px 24px rgba(239, 68, 68, 0.3), inset 0 1.5px 1.5px rgba(255, 255, 255, 0.6);
 }
 
 @media (max-width: 900px) {
@@ -1486,11 +1471,12 @@ html, body {
   z-index: 20;
 }
 
+/* Airy, more transparent sidebar letting background glow through */
 #shiguang.translucent #project-sidebar {
-  background: light-dark(rgba(255, 255, 255, 0.38), rgba(18, 24, 34, 0.45)) !important;
-  backdrop-filter: blur(28px) saturate(170%);
-  -webkit-backdrop-filter: blur(28px) saturate(170%);
-  border-right: 1px solid var(--glint);
+  background: light-dark(rgba(255, 255, 255, 0.16), rgba(12, 16, 23, 0.25)) !important;
+  backdrop-filter: blur(32px) saturate(180%);
+  -webkit-backdrop-filter: blur(32px) saturate(180%);
+  border-right: 1px solid light-dark(rgba(255, 255, 255, 0.25), rgba(255, 255, 255, 0.06)) !important;
 }
 
 #shiguang.sidebar-collapsed #project-sidebar {
@@ -1547,7 +1533,7 @@ html, body {
   justify-content: flex-start;
   gap: 10px;
   margin: 4px 0 2px;
-  padding: 10px 14px;
+  padding: 10px 16px;
   border: 1px solid var(--droplet-border);
   border-radius: 9999px;
   background: var(--droplet-bg);
@@ -1579,46 +1565,49 @@ html, body {
 #shiguang #project-list {
   display: grid;
   align-content: start;
-  gap: 6px;
+  gap: 8px;
   overflow: auto;
   min-height: 0;
-  padding-right: 2px;
+  padding: 4px 2px 8px;
 }
 
+/* Floating Project Island Capsules (Matching iOS New Style Reference Image) */
 #shiguang .project-row {
+  position: relative;
   display: flex;
   align-items: stretch;
-  gap: 2px;
+  gap: 4px;
   min-width: 0;
-  border-radius: 14px;
-  border: 1px solid transparent;
-  transition: background .16s ease, border-color .16s ease, transform .12s ease, box-shadow .16s ease;
+  border-radius: 16px;
+  background: light-dark(rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.05));
+  border: 1px solid light-dark(rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0.08));
+  box-shadow: 0 3px 10px var(--shade), inset 0 1px 1px var(--glint);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  padding: 2px 4px 2px 2px;
+  transition: transform .18s cubic-bezier(0.2, 0, 0.1, 1), box-shadow .18s ease, background .18s ease, border-color .18s ease;
 }
 
 #shiguang .project-row:hover {
-  background: var(--soft);
-  border-color: var(--line);
-  transform: translateY(-1px);
+  transform: translateY(-2px);
+  background: light-dark(rgba(255, 255, 255, 0.78), rgba(255, 255, 255, 0.10));
+  box-shadow: 0 8px 24px var(--shade), inset 0 1.2px 1.2px var(--glint);
+  border-color: light-dark(rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.18));
 }
 
 #shiguang .project-row.is-active {
-  background: var(--surface);
-  border-color: var(--glint);
-  box-shadow: 0 4px 14px var(--shade), inset 0 1px 1px var(--glint);
-}
-
-#shiguang.translucent .project-row.is-active {
-  background: light-dark(rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0.15)) !important;
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  background: light-dark(rgba(255, 255, 255, 0.88), rgba(255, 255, 255, 0.15)) !important;
+  border-color: var(--accent) !important;
+  box-shadow: 0 8px 24px var(--shade), inset 0 1.2px 1.2px var(--glint);
+  transform: translateY(-1px);
 }
 
 #shiguang .project-open {
   flex: 1;
   min-width: 0;
-  padding: 10px 10px 9px;
+  padding: 10px 12px 9px;
   border: 0;
-  border-radius: 12px;
+  border-radius: 14px;
   background: transparent;
   color: var(--ink);
   text-align: left;
@@ -1663,8 +1652,8 @@ html, body {
   height: 3px;
   margin-top: 7px;
   overflow: hidden;
-  border-radius: 6px;
-  background: var(--line);
+  border-radius: 9999px;
+  background: light-dark(rgba(0, 0, 0, 0.06), rgba(255, 255, 255, 0.10));
 }
 
 #shiguang .project-progress-track > span {
@@ -1675,12 +1664,12 @@ html, body {
 }
 
 #shiguang .project-settings {
-  flex: 0 0 32px;
+  flex: 0 0 30px;
   align-self: center;
-  width: 32px;
-  height: 32px;
+  width: 30px;
+  height: 30px;
   border: 0;
-  border-radius: 10px;
+  border-radius: 50%;
   background: transparent;
   color: var(--muted);
   font-size: 14px;
@@ -1695,7 +1684,7 @@ html, body {
 }
 
 #shiguang .project-settings:hover {
-  background: var(--surface);
+  background: var(--soft);
   color: var(--accent);
 }
 

@@ -21,4 +21,6 @@ test('settings view provides clear segmented control for light and dark themes',
   assert(css.includes('9999px'), 'style.css 应包含水滴胶囊圆角 9999px');
   assert(css.includes('#shiguang.translucent #project-sidebar'), 'style.css 应为毛玻璃侧边栏提供半透明玻璃质感');
   assert(!css.includes('@keyframes gleam-sweep'), 'style.css 应已移除过于激进的循环扫光动画');
+  assert(css.includes('mask-composite: exclude') || css.includes('-webkit-mask-composite: xor'), 'style.css 应使用边缘遮罩确保流光仅出现在边界而不溢入按钮内部');
+  assert(css.includes('#376a8d') || css.includes('#447b9f'), 'style.css 应采用日产 Telecaster Lake Placid Blue 湖水蓝克制调色');
 });

@@ -20,11 +20,12 @@
   z-index: 20;
 }
 
+/* Airy, more transparent sidebar letting background glow through */
 #shiguang.translucent #project-sidebar {
-  background: light-dark(rgba(255, 255, 255, 0.38), rgba(18, 24, 34, 0.45)) !important;
-  backdrop-filter: blur(28px) saturate(170%);
-  -webkit-backdrop-filter: blur(28px) saturate(170%);
-  border-right: 1px solid var(--glint);
+  background: light-dark(rgba(255, 255, 255, 0.16), rgba(12, 16, 23, 0.25)) !important;
+  backdrop-filter: blur(32px) saturate(180%);
+  -webkit-backdrop-filter: blur(32px) saturate(180%);
+  border-right: 1px solid light-dark(rgba(255, 255, 255, 0.25), rgba(255, 255, 255, 0.06)) !important;
 }
 
 #shiguang.sidebar-collapsed #project-sidebar {
@@ -81,7 +82,7 @@
   justify-content: flex-start;
   gap: 10px;
   margin: 4px 0 2px;
-  padding: 10px 14px;
+  padding: 10px 16px;
   border: 1px solid var(--droplet-border);
   border-radius: 9999px;
   background: var(--droplet-bg);
@@ -113,46 +114,49 @@
 #shiguang #project-list {
   display: grid;
   align-content: start;
-  gap: 6px;
+  gap: 8px;
   overflow: auto;
   min-height: 0;
-  padding-right: 2px;
+  padding: 4px 2px 8px;
 }
 
+/* Floating Project Island Capsules (Matching iOS New Style Reference Image) */
 #shiguang .project-row {
+  position: relative;
   display: flex;
   align-items: stretch;
-  gap: 2px;
+  gap: 4px;
   min-width: 0;
-  border-radius: 14px;
-  border: 1px solid transparent;
-  transition: background .16s ease, border-color .16s ease, transform .12s ease, box-shadow .16s ease;
+  border-radius: 16px;
+  background: light-dark(rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.05));
+  border: 1px solid light-dark(rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0.08));
+  box-shadow: 0 3px 10px var(--shade), inset 0 1px 1px var(--glint);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  padding: 2px 4px 2px 2px;
+  transition: transform .18s cubic-bezier(0.2, 0, 0.1, 1), box-shadow .18s ease, background .18s ease, border-color .18s ease;
 }
 
 #shiguang .project-row:hover {
-  background: var(--soft);
-  border-color: var(--line);
-  transform: translateY(-1px);
+  transform: translateY(-2px);
+  background: light-dark(rgba(255, 255, 255, 0.78), rgba(255, 255, 255, 0.10));
+  box-shadow: 0 8px 24px var(--shade), inset 0 1.2px 1.2px var(--glint);
+  border-color: light-dark(rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.18));
 }
 
 #shiguang .project-row.is-active {
-  background: var(--surface);
-  border-color: var(--glint);
-  box-shadow: 0 4px 14px var(--shade), inset 0 1px 1px var(--glint);
-}
-
-#shiguang.translucent .project-row.is-active {
-  background: light-dark(rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0.15)) !important;
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  background: light-dark(rgba(255, 255, 255, 0.88), rgba(255, 255, 255, 0.15)) !important;
+  border-color: var(--accent) !important;
+  box-shadow: 0 8px 24px var(--shade), inset 0 1.2px 1.2px var(--glint);
+  transform: translateY(-1px);
 }
 
 #shiguang .project-open {
   flex: 1;
   min-width: 0;
-  padding: 10px 10px 9px;
+  padding: 10px 12px 9px;
   border: 0;
-  border-radius: 12px;
+  border-radius: 14px;
   background: transparent;
   color: var(--ink);
   text-align: left;
@@ -197,8 +201,8 @@
   height: 3px;
   margin-top: 7px;
   overflow: hidden;
-  border-radius: 6px;
-  background: var(--line);
+  border-radius: 9999px;
+  background: light-dark(rgba(0, 0, 0, 0.06), rgba(255, 255, 255, 0.10));
 }
 
 #shiguang .project-progress-track > span {
@@ -209,12 +213,12 @@
 }
 
 #shiguang .project-settings {
-  flex: 0 0 32px;
+  flex: 0 0 30px;
   align-self: center;
-  width: 32px;
-  height: 32px;
+  width: 30px;
+  height: 30px;
   border: 0;
-  border-radius: 10px;
+  border-radius: 50%;
   background: transparent;
   color: var(--muted);
   font-size: 14px;
@@ -229,7 +233,7 @@
 }
 
 #shiguang .project-settings:hover {
-  background: var(--surface);
+  background: var(--soft);
   color: var(--accent);
 }
 

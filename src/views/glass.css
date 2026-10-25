@@ -7,10 +7,13 @@
   --muted: #475569;
   --line: rgba(15, 23, 42, 0.12);
   --line-strong: rgba(15, 23, 42, 0.22);
-  --accent: #1a62dc;
-  --accent-hover: #1551be;
+  /* Japanese Fender Telecaster Lake Placid Blue (Restrained vintage metallic cyan-slate) */
+  --accent: #376a8d;
+  --accent-hover: #2b5674;
   --accent-contrast: #ffffff;
-  --soft: #e2edfd;
+  --accent-gradient: linear-gradient(175deg, #447b9f 0%, #2b5776 100%);
+  --soft: rgba(55, 106, 141, 0.10);
+  --soft-border: rgba(55, 106, 141, 0.22);
   --glass: rgba(255, 255, 255, 0.72);
   --glass-dock: rgba(255, 255, 255, 0.68);
   --glint: rgba(255, 255, 255, 0.90);
@@ -18,7 +21,7 @@
   --droplet-bg: linear-gradient(180deg, rgba(255, 255, 255, 0.88) 0%, rgba(240, 245, 252, 0.72) 100%);
   --droplet-border: rgba(255, 255, 255, 0.85);
   --droplet-shadow: 0 4px 14px rgba(15, 23, 42, 0.06), inset 0 1.2px 1.2px rgba(255, 255, 255, 0.95), inset 0 -1px 2px rgba(0, 0, 0, 0.04);
-  --droplet-hover-shadow: 0 8px 24px rgba(26, 98, 220, 0.15), inset 0 1.5px 1.5px rgba(255, 255, 255, 1);
+  --droplet-hover-shadow: 0 8px 24px rgba(55, 106, 141, 0.15), inset 0 1.5px 1.5px rgba(255, 255, 255, 1);
 }
 
 #shiguang[data-theme="dark"] {
@@ -30,10 +33,13 @@
   --muted: #94a3b8;
   --line: rgba(255, 255, 255, 0.12);
   --line-strong: rgba(255, 255, 255, 0.24);
-  --accent: #3b82f6;
-  --accent-hover: #60a5fa;
+  /* Japanese Fender Telecaster Lake Placid Blue in Dark Mode (Metallic Ice Frost) */
+  --accent: #5e97be;
+  --accent-hover: #75abd0;
   --accent-contrast: #ffffff;
-  --soft: rgba(59, 130, 246, 0.20);
+  --accent-gradient: linear-gradient(175deg, #4f86ab 0%, #305f80 100%);
+  --soft: rgba(94, 151, 190, 0.16);
+  --soft-border: rgba(94, 151, 190, 0.28);
   --glass: rgba(22, 28, 38, 0.75);
   --glass-dock: rgba(24, 32, 44, 0.75);
   --glint: rgba(255, 255, 255, 0.18);
@@ -41,7 +47,7 @@
   --droplet-bg: linear-gradient(180deg, rgba(38, 48, 64, 0.78) 0%, rgba(24, 31, 42, 0.82) 100%);
   --droplet-border: rgba(255, 255, 255, 0.16);
   --droplet-shadow: 0 6px 18px rgba(0, 0, 0, 0.35), inset 0 1.2px 1.2px rgba(255, 255, 255, 0.25), inset 0 -1.5px 2px rgba(0, 0, 0, 0.4);
-  --droplet-hover-shadow: 0 8px 26px rgba(59, 130, 246, 0.25), inset 0 1.5px 1.5px rgba(255, 255, 255, 0.35);
+  --droplet-hover-shadow: 0 8px 26px rgba(94, 151, 190, 0.22), inset 0 1.5px 1.5px rgba(255, 255, 255, 0.35);
 }
 
 #shiguang {
@@ -92,7 +98,6 @@
 #shiguang .review-zoom,
 #shiguang .droplet-btn {
   position: relative;
-  isolation: isolate;
   background: var(--droplet-bg);
   border: 1px solid var(--droplet-border);
   border-radius: 9999px;
@@ -135,16 +140,16 @@
   outline-offset: 3px;
 }
 
-/* Primary Liquid Gem Droplet - Always crisp high contrast white text */
+/* Primary Liquid Gem Droplet - Japanese Fender Telecaster Metallic Lacquer */
 #shiguang .button.primary,
 #shiguang .review button.primary,
 #shiguang .droplet-btn.primary,
 #shiguang .button.is-active,
 #shiguang .droplet-btn.is-active {
-  background: linear-gradient(175deg, #3b82f6 0%, #1d4ed8 100%) !important;
+  background: var(--accent-gradient) !important;
   color: #ffffff !important;
   border-color: rgba(255, 255, 255, 0.35) !important;
-  box-shadow: 0 4px 16px rgba(29, 78, 216, 0.35), inset 0 1.5px 1px rgba(255, 255, 255, 0.75), inset 0 -2px 3px rgba(0, 0, 0, 0.25) !important;
+  box-shadow: 0 4px 14px rgba(43, 87, 118, 0.35), inset 0 1.5px 1px rgba(255, 255, 255, 0.75), inset 0 -2px 3px rgba(0, 0, 0, 0.25) !important;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
   font-weight: 600;
 }
@@ -152,7 +157,7 @@
 #shiguang .button.primary:hover:not(:disabled),
 #shiguang .review button.primary:hover:not(:disabled),
 #shiguang .droplet-btn.primary:hover:not(:disabled) {
-  box-shadow: 0 8px 24px rgba(29, 78, 216, 0.48), inset 0 1.5px 1.5px rgba(255, 255, 255, 0.9) !important;
+  box-shadow: 0 8px 22px rgba(43, 87, 118, 0.45), inset 0 1.5px 1.5px rgba(255, 255, 255, 0.9) !important;
   transform: translateY(-2px) scale(1.025);
 }
 
@@ -261,7 +266,7 @@
   inset: 0;
   z-index: -1;
   pointer-events: none;
-  background: radial-gradient(ellipse at 95% 0, light-dark(rgba(185, 213, 255, 0.22), rgba(138, 182, 255, 0.08)), transparent 60%);
+  background: radial-gradient(ellipse at 95% 0, light-dark(rgba(68, 123, 159, 0.12), rgba(94, 151, 190, 0.06)), transparent 60%);
 }
 
 #shiguang .review-tag-row {
@@ -358,7 +363,7 @@
 
 #shiguang .home-entry {
   min-height: 470px;
-  background: radial-gradient(ellipse at 50% 40%, light-dark(rgba(225, 234, 247, 0.4), rgba(53, 76, 108, 0.2)), transparent 60%);
+  background: radial-gradient(ellipse at 50% 40%, light-dark(rgba(68, 123, 159, 0.15), rgba(43, 87, 118, 0.12)), transparent 60%);
 }
 
 #shiguang .home-folder {
@@ -464,11 +469,12 @@
   -webkit-backdrop-filter: blur(28px) saturate(180%);
 }
 
+/* Left sidebar: significantly more translucent/airy like reference image */
 #shiguang.translucent #project-sidebar {
-  background: light-dark(rgba(255, 255, 255, 0.35), rgba(18, 24, 34, 0.45)) !important;
-  backdrop-filter: blur(24px) saturate(160%);
-  -webkit-backdrop-filter: blur(24px) saturate(160%);
-  border-right: 1px solid var(--glint);
+  background: light-dark(rgba(255, 255, 255, 0.16), rgba(12, 16, 23, 0.25)) !important;
+  backdrop-filter: blur(32px) saturate(180%);
+  -webkit-backdrop-filter: blur(32px) saturate(180%);
+  border-right: 1px solid light-dark(rgba(255, 255, 255, 0.25), rgba(255, 255, 255, 0.06)) !important;
 }
 
 #shiguang.translucent .app-chrome {
@@ -479,21 +485,11 @@
 }
 
 #shiguang.translucent .sidebar-new-project {
-  background: light-dark(rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.08)) !important;
+  background: light-dark(rgba(255, 255, 255, 0.60), rgba(255, 255, 255, 0.08)) !important;
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
   border: 1px solid var(--glint);
   box-shadow: 0 4px 14px var(--shade), inset 0 1px 1px var(--glint);
-}
-
-#shiguang.translucent .project-row:hover {
-  background: light-dark(rgba(255, 255, 255, 0.65), rgba(255, 255, 255, 0.12)) !important;
-}
-
-#shiguang.translucent .project-row.is-active {
-  background: light-dark(rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.20)) !important;
-  border: 1px solid var(--glint);
-  box-shadow: 0 4px 14px var(--shade), inset 0 1px 1.5px var(--glint);
 }
 
 #shiguang.translucent .review-dock {
