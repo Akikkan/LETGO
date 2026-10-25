@@ -16,8 +16,11 @@ async function updateRelease() {
       await fs.copyFile(srcFile, path.join(tempDir, 'src', file));
     }
   }
-  for (const file of ['index.html', 'app.js', 'style.css']) {
-    await fs.copyFile(path.join(root, 'ui', file), path.join(tempDir, 'ui', file));
+  for (const file of ['index.html', 'app.js', 'style.css', 'icon.png']) {
+    const uiFile = path.join(root, 'ui', file);
+    if (await fs.stat(uiFile).then(() => true, () => false)) {
+      await fs.copyFile(uiFile, path.join(tempDir, 'ui', file));
+    }
   }
 
   const asarTarget = path.join(root, 'release-v0.2', 'Shiguang-win32-x64', 'resources', 'app.asar');
